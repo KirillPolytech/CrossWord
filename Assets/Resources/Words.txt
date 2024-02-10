@@ -1,0 +1,56 @@
+encryption
+an authorised party
+plaintext ciphertext
+leaking
+scramble
+alter
+decrypt
+turn smth back into
+intercept
+couple smth with
+incomprehensible
+cryptographic
+intended
+rightful
+highly unlikely
+a set of mathematical values
+by brute force
+at rest in transit
+a string of characters
+sensitive data
+data breaches
+regulatory and compliance standards
+HTTPS
+TLS
+SSL
+data protection principles
+consider
+skill set
+encounter
+cover
+vulnerability
+ransomware
+encompass
+confidentiality
+availability
+integrity
+focus on
+ensure
+surround
+potential corruption
+outcome
+secure policies, procedures and rules
+act proactively
+expand storage capacity
+data management tools
+permanent data loss or damage
+balance
+prevent smb from doing smth
+accessible
+usable
+abide
+integral
+consistent and regular backup
+safe and secure
+outdated
+vpn
