@@ -907,10 +907,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 187188427}
   m_HandleRect: {fileID: 1766601584}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 7
   m_MaxValue: 32
   m_WholeNumbers: 1
-  m_Value: 0
+  m_Value: 7
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1135,6 +1135,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1490626112}
   - component: {fileID: 1490626111}
+  - component: {fileID: 1490626113}
   m_Layer: 0
   m_Name: Crossword
   m_TagString: Untagged
@@ -1154,15 +1155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e26982535725a2044ae49ef179ecf67e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 955454364}
-  wordParentPrefab: {fileID: 2688746725597032198, guid: 018ada82fd37d8048af7ee0e939bcee0,
-    type: 3}
-  blockPrefab: {fileID: 4779032717168666309, guid: bc73729afd8aaa84fb149ac6978d1757,
-    type: 3}
-  characterColor: {r: 0, g: 0, b: 0, a: 1}
-  description: {fileID: 1464592119}
-  distanceBetweenBlocks: 1
-  crosswordLength: 10
 --- !u!4 &1490626112
 Transform:
   m_ObjectHideFlags: 0
@@ -1178,6 +1170,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1490626113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1490626110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da804252c135974a956acf9dbe0326a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 955454364}
+  slider: {fileID: 1131786062}
+  wordParentPrefab: {fileID: 2688746725597032198, guid: 018ada82fd37d8048af7ee0e939bcee0,
+    type: 3}
+  blockPrefab: {fileID: 4779032717168666309, guid: bc73729afd8aaa84fb149ac6978d1757,
+    type: 3}
+  characterColor: {r: 0, g: 0, b: 0, a: 1}
+  description: {fileID: 1464592119}
+  distanceBetweenBlocks: 1
+  crosswordLength: 10
 --- !u!1 &1577382989
 GameObject:
   m_ObjectHideFlags: 0
@@ -1719,7 +1733,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 2
+  m_text: 7
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1960,5 +1974,5 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 1124172554}
   - {fileID: 955454365}
-  - {fileID: 1490626112}
   - {fileID: 1830837344}
+  - {fileID: 1490626112}

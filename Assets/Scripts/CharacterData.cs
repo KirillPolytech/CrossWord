@@ -8,15 +8,10 @@ public class CharacterData
     public int charIndex;
     public Transform transform;
     public char desiredChar;
-    public CharacterData()
-    {
-        
-    }
-
     public CharacterData(TMP_InputField inputfield, Color c, int ind, char desiredchar, Transform t, string inputfieldText) 
     {
         inputField = inputfield;
-        inputField.text = inputfieldText;
+        inputField.text = inputfieldText;// ""; //inputfieldText;
 
         desiredChar = desiredchar;
 
