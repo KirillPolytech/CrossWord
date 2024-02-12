@@ -1,0 +1,56 @@
+﻿encryption -  This is a means of protecting information from unauthorized access and viewing.
+an authorised party - This is a party that has permission or authority to access certain information or resources.
+plaintext ciphertext - this is the original information or a message that has not yet been encrypted.
+leaking - this is an unauthorized disclosure or leak of information.
+scramble - the process of reordering or rearranging characters or elements in a message to make it more difficult to understand or reverse engineer it.
+alter - It is the process of making changes to a message or information in order to change its meaning or prevent it from being understood correctly.
+decrypt - This is the process of converting the ciphertext back to the original plaintext using a key or decryption algorithm.
+turn smth back into - This is the process of converting encrypted information back to the original plaintext.
+intercept - This is the process of intercepting or gaining access to transmitted information or messages without the permission or knowledge of the competent parties.
+couple smth with - It is the process of linking or combining one element or value with another.
+incomprehensible - this is something that is unclear or difficult to understand or make out.
+cryptographic - it is related to the science or practice of encrypting and decrypting information.
+intended - it is something made or intended for a specific use, recipient, or purpose.
+rightful - it is something that is legitimate or has the right status or attribute.
+highly unlikely - this is something that has a very low probability or is highly unlikely to happen.
+a set of mathematical values - This is a specific set of numeric values or parameters used in mathematical calculations or algorithms.
+by brute force - This is a method in which a solution is sought or a password is guessed by going through every possible combination.
+at rest in transit - this describes the state of the data either in a separate system or storage, or in the process of being transmitted over the network.
+a string of characters - it is a sequence or set of characters or symbolic values.
+sensitive data - This is information that requires special care or protection due to its confidentiality, criticality, or potential negative consequences of its leakage.
+data breaches - This is an unauthorized disclosure
+regulatory and compliance standards - regulatory and compliance standards, compliance requirements and regulations that establish rules and standards to be followed.
+HTTPS - a protocol for secure data transmission on the Internet that uses encryption to ensure the confidentiality and integrity of information.
+TLS - A transport layer protocol that provides secure data transmission on the network using encryption and party identification.
+SSL - an outdated protocol for secure data transmission on the Internet.
+data protection principles - smth that include the collection and processing of personal data in compliance with legal requirements and confidentiality rules.
+consider - ponder, or take into account when making a decision or analyzing a situation.
+skill set - a set of ... possessed by a person or a group of people.
+encounter - 
+cover - to encompass, enclose, or be applicable to a particular aspect or area.
+vulnerability - a weak point or flaw that makes something vulnerable to danger or attack.
+ransomware - A type of malicious software that blocks access to data or devices until a ransom is paid.
+encompass - to incorporate, or combine various aspects or elements.
+confidentiality - protection of information from unauthorized access or disclosure.
+availability - a state where information or resources are available at the right time and place.
+integrity - protecting information from alteration or substitution so that it remains intact and reliable.
+focus on - pay attention to or focus on a particular aspect or section.
+ensure - to guarantee, provide or perform certain actions to achieve the desired result
+surround - to encircle something from all sides or to be inside the zone of action or influence.
+potential corruption - the likelihood of damage, changes or degradation of data or system.
+outcome - результат или итог, который происходит или получается в результате определенной ситуации или действия
+secure policies, procedures and rules
+act proactively
+expand storage capacity
+data management tools
+permanent data loss or damage
+balance
+prevent smb from doing smth
+accessible
+usable
+abide
+integral
+consistent and regular backup
+safe and secure
+outdated
+vpn

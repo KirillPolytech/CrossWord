@@ -1,30 +1,34 @@
-using TMPro;
 using UnityEngine;
 
 public class CharacterLogic : MonoBehaviour
-{
-    [SerializeField] private TMP_InputField inputField;
-
-    public CharacterData characterData;
-    public WordData wordData;
+{   
+    public WordData wordData = new WordData();
+    public string wordDescription;
+    public bool IsCompleted { get; private set; }
     private void Awake()
     {
-        characterData = new CharacterData();
-
-        characterData.inputField = inputField;
-
-        inputField.onValueChanged.AddListener((s) => LimitText(s));
+        IsCompleted = false;
     }
 
-    private void LimitText(string s)
+    public void CheckWordCompletion()
     {
-        s = s.Trim();
-        if (s == null || s.Length <= 0)
+        if (IsCompleted == true)
             return;
 
-        s = s[0].ToString();
+        foreach (var item in wordData.characters)
+        {
+            if (item?.inputField.text != item?.desiredChar.ToString())
+                return;         
+        }
 
-        inputField.text = s;
+        foreach (var item in wordData.characters)
+        {
+            if (item != null && item.inputField)
+                item.inputField.textComponent.color = Color.green;
+        }
+
+        IsCompleted = true;
+
+        Debug.Log("Completed");
     }
-
 }

@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class WordData : MonoBehaviour
+public class WordData
 {
-    public CharacterLogic[] characters;
+    public CharacterData[] characters;
 }

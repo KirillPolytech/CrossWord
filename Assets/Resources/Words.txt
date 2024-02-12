@@ -1,4 +1,4 @@
-encryption
+﻿encryption
 an authorised party
 plaintext ciphertext
 leaking
