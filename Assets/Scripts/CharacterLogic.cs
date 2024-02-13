@@ -15,21 +15,16 @@ public class CharacterLogic : MonoBehaviour
         if (IsCompleted == true)
             return;
 
-        bool _isComplete = true;
         foreach (var item in wordData.characters)
         {
             string str = item?.desiredChar.ToString().Trim();
             string str2 = item?.inputField.text.ToString().Trim();
-            Debug.Log($"InputField: {str2} DesiredChar: {str}");
+            //Debug.Log($"InputField: {str2} DesiredChar: {str}");
             if (str2 != str)
             {
-                //return;
-                _isComplete = false;
+                return;
             }                
         }
-
-        if (_isComplete == false)
-            return;
 
         foreach (var item in wordData.characters)
         {

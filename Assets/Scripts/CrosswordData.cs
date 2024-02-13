@@ -11,7 +11,9 @@ public class CrosswordData : MonoBehaviour
     public Color characterColor = Color.black;
     public TextMeshProUGUI description;
     [Range(0f, 1f)]public float distanceBetweenBlocks = 1f;
-    [Range(2, 32)]public int crosswordLength = 10;
+    [Range(7, 32)]public int crosswordLength = 7;
+    public TextAsset words;
+    public TextAsset descriptions;
     private void Awake()
     {
         slider.onValueChanged.AddListener( (x) => ChangeLength(x) );

@@ -4,6 +4,8 @@ public class PlayerCam : MonoBehaviour
 {
     [Range(50, 500)][SerializeField] private int rayDistance = 100;
     [Range(1, 10)][SerializeField] private int scrollSens = 5;
+    [Range(20, 40)][SerializeField] private int fovMin = 20;
+    [Range(100, 300)][SerializeField] private int fovMax = 200;
 
     private float _mouseButton, _mouseScroll;   
     private Camera _camera;
@@ -29,7 +31,7 @@ public class PlayerCam : MonoBehaviour
 
     private void HandleScroll()
     {
-        _camera.fieldOfView = Mathf.Clamp(_camera.fieldOfView - _mouseScroll * scrollSens, 20, 120);
+        _camera.fieldOfView = Mathf.Clamp(_camera.fieldOfView - _mouseScroll * scrollSens, fovMin, fovMax);
     }
 
     private void HandleMovement()
