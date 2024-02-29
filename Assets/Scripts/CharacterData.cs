@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class CharacterData
 {
+    public Transform transform;
     public TMP_InputField inputField;
     public Color color;
     public int charIndex;
-    public Transform transform;
     public char desiredChar;
     public CharacterData(TMP_InputField inputfield, Color c, int ind, char desiredchar, Transform t, string inputfieldText) 
     {

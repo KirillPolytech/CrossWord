@@ -1,18 +1,25 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CrossWord : MonoBehaviour
 {
-    private readonly HashSet<int> chosenWords = new HashSet<int>();
     private readonly HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
+    private readonly HashSet<CharacterLogic> spawnedWords = new HashSet<CharacterLogic>();
 
-    private const int ITERATIONLIMIT = 10000;
+    private const int ITERATIONLIMIT = 50;
+    private int _temp = 0;
 
     private string[] words, descriptions;
     private int[] horizontalWordIndexes, verticalWordIndexes;
     private int _horizontalWordInd, _verticalWordInd;
     private CrosswordData _crosswordData;
+    private int _indTest = 0;
+
+    private Vector3 _horizontalDir = Vector3.right, _verticalDir = -Vector3.up;
     private void Awake()
     {
         _crosswordData = GetComponent<CrosswordData>();
@@ -22,15 +29,16 @@ public class CrossWord : MonoBehaviour
 
         for (int i = 0; i < words.Length; i++)
             words[i] = words[i].ToLower();       
-
-        horizontalWordIndexes = new int[_crosswordData.crosswordLength];
-        verticalWordIndexes = new int[_crosswordData.crosswordLength];
     }
 
     public void Generate()
     {
         int wordInd = GetRandomWordIndex(words.Length);
         Destroy();
+
+        horizontalWordIndexes = new int[_crosswordData.crosswordLength + 1];
+        verticalWordIndexes = new int[_crosswordData.crosswordLength + 1];
+
         GenerateCrossword(wordInd, words, descriptions);
         SetDescription();
     }
@@ -42,38 +50,54 @@ public class CrossWord : MonoBehaviour
             Destroy(_crosswordData.canvas.transform.GetChild(i).gameObject);
         }
 
-        chosenWords.Clear();
         occupiedPositions.Clear();
+        spawnedWords.Clear();
         _horizontalWordInd = _verticalWordInd = 0;
     }
 
     private void GenerateCrossword(int wordInd, string[] words, string[] descriptions)
     {
         Vector3 startPos = Vector3.zero;
-        Vector3 dir = -Vector3.up * _crosswordData.distanceBetweenBlocks;
+        Vector3 dir = _verticalDir * _crosswordData.distanceBetweenBlocks;
         CharacterData sameChar;
 
-        CharacterData[] wordCharacters = SpawnWord(startPos, dir, words[wordInd], descriptions[wordInd], null);
-        chosenWords.Add(wordInd);
-        startPos = Vector3.zero - dir * FindCharIndex(wordCharacters, words[wordInd]);
+        CharacterLogic word = SpawnWord(startPos, dir, words[wordInd], descriptions[wordInd], null, wordInd);
+        spawnedWords.Add(word);
         verticalWordIndexes[_verticalWordInd++] = wordInd;
         _verticalWordInd = Mathf.Clamp(_verticalWordInd, 0, verticalWordIndexes.Length - 1);
-        for (int j = 0; j < _crosswordData.crosswordLength * 2; j++)
-        {
-            dir = (j + 1) % 2 == 0 ? 
-                -Vector3.up * _crosswordData.distanceBetweenBlocks : 
-                Vector3.right * _crosswordData.distanceBetweenBlocks;
 
-            int y = 0;
+        for (int j = 0; j < _crosswordData.crosswordLength * 2 + 2; j++)
+        {
+            dir = (j + 1) % 2 == 0 ?
+                _verticalDir * _crosswordData.distanceBetweenBlocks : 
+                _horizontalDir * _crosswordData.distanceBetweenBlocks;
+
+            _indTest = 0;//GetRandomWordIndex(words.Length);
             do
             {
-                if (y++ > ITERATIONLIMIT)
+                if (_indTest >= words.Length - 1)
                     break;
 
                 // get random word ind.
-                wordInd = GetRandomWordIndex(words.Length);
+                //wordInd = GetRandomWordIndex(words.Length);
+
+                wordInd = Mathf.Clamp(_indTest++, 0, words.Length);
+
+                if (spawnedWords.Where( x => x.wordData.wordIndex == wordInd).FirstOrDefault() != null)
+                    continue;
+
                 // check if words have same char.
-                sameChar = FindSameCharacter(wordCharacters, words[wordInd]);
+                //sameChar = FindSameCharacter(wordCharacters, words[wordInd]);
+
+                // check if spawned words and current word have same char.
+                sameChar = null;
+                for (int i = 0; i < spawnedWords.Count; i++)
+                {
+                    sameChar = FindSameCharacter(spawnedWords.ElementAt(i).wordData.characters, words[wordInd]);
+
+                    if (sameChar != null)
+                        break;
+                }
 
                 if (sameChar == null)
                 {
@@ -81,17 +105,39 @@ public class CrossWord : MonoBehaviour
                 }
 
                 // initalize start pos.
-                startPos = sameChar.transform.localPosition - dir * FindCharIndex(wordCharacters, words[wordInd]);
+                startPos = sameChar.transform.localPosition - dir * FindCharIndexInWord(words[wordInd], sameChar.desiredChar);
 
-                if (HasIntersections(words[wordInd], sameChar.desiredChar, startPos, dir) == true)
+                // check if word has other intersections.
+
+                //if (HasIntersections(words[wordInd], sameChars.desiredChar, startPos, dir) == true)
+                int index = FindCharIndexInWord(words[wordInd], sameChar.desiredChar);
+
+                CharacterData[] sameChars = FindIntersectionChars(words[wordInd], index, startPos, dir);
+                if (sameChars == null)
                 {
                     continue;
                 }
 
-                // spawn word.
-                wordCharacters = SpawnWord(startPos, dir, words[wordInd], descriptions[wordInd], sameChar);
+                /*
+                if (HasIntersections(words[wordInd], index, startPos, dir) == true)
+                {
+                    continue;
+                }
+                */
 
-                chosenWords.Add(wordInd);
+                CharacterData[] d = new CharacterData[sameChars.Count() + 1];
+                for (int i = 0; i < d.Length - 1; i++)
+                {
+                    d[i] = sameChars[i];
+                }
+
+                d[d.Length - 1] = sameChar;
+
+                // spawn word.
+                word = SpawnWord(startPos, dir, words[wordInd], descriptions[wordInd], d, wordInd);
+
+                spawnedWords.Add(word);
+
                 if ((j + 1) % 2 == 0)
                 {
                     verticalWordIndexes[_verticalWordInd++] = wordInd;
@@ -103,27 +149,37 @@ public class CrossWord : MonoBehaviour
                     _horizontalWordInd = Mathf.Clamp(_horizontalWordInd, 0, horizontalWordIndexes.Length - 1);
                 }
                 break;
-            } while (sameChar == null);            
+            } while (true);            
         }
     }
 
-    private CharacterData[] SpawnWord(Vector3 start, Vector3 dir, string word, string wordDescription, CharacterData intersectedChar)
+    private CharacterLogic SpawnWord(Vector3 start, Vector3 dir, string word, string wordDescription, CharacterData[] intersectedChar, int wordIndex)
     {
         // spawn parent.
         CharacterLogic charLogic = Instantiate(_crosswordData.wordParentPrefab, _crosswordData.canvas.transform).GetComponent<CharacterLogic>();
         charLogic.wordDescription = wordDescription;
         charLogic.name = word;
 
-        bool isDestroyedIntesection = false;
+        int z = 0;
         CharacterData[] letter = new CharacterData[word.Length];
         for (int f = 0; f < word.Length; f++)
         {
             // miss intersection.
-            if (intersectedChar?.desiredChar == word[f] && isDestroyedIntesection == false)
+            if (intersectedChar != null)
             {
-                letter[f] = intersectedChar;
-                isDestroyedIntesection = true;
-                continue;
+                try
+                {
+                    if (z != intersectedChar.Length && intersectedChar[z].desiredChar.ToString() == word[f].ToString())
+                    {
+                        letter[f] = intersectedChar[z++];
+                        continue;
+                    }
+                }
+                catch (System.Exception e)
+                {
+
+                    throw e;
+                }
             }
 
             // spawn each char.
@@ -146,23 +202,15 @@ public class CrossWord : MonoBehaviour
 
         charLogic.wordData.characters = letter;
 
-        return letter;
-    }
+        if (dir == _verticalDir)
+            charLogic.wordData.characters[0].transform.gameObject.GetComponentInChildren<Text>().text = $"{_verticalWordInd + 1}";
+        else
+            charLogic.wordData.characters[0].transform.gameObject.GetComponentInChildren<Text>().text = $"{_horizontalWordInd + 1}";
 
-    private int FindCharIndex(CharacterData[] word, string nextWord)
-    {
-        for (int i = 0; i < word.Length; i++)
-        {
-            for (int j = 0; j < nextWord.Length; j++)
-            {
-                if (word[i].desiredChar.ToString() == nextWord[j].ToString())
-                {
-                    return j;
-                }
-            }
-        }
+        charLogic.wordData.wordIndex = wordIndex;
+        spawnedWords.Add(charLogic);
 
-        return -1;
+        return charLogic;
     }
 
     private int FindCharIndexInWord(string word, char chr)
@@ -188,6 +236,7 @@ public class CrossWord : MonoBehaviour
                 if (word[i].desiredChar.ToString() == nextWord[z].ToString())
                 {
                     //Debug.Log($"Same characters: {word[i].character.text} and {s}");
+
                     return word[i];
                 }
             }
@@ -196,29 +245,86 @@ public class CrossWord : MonoBehaviour
         return null;
     }
 
-    private bool HasIntersections(string word, char intersectedChar, Vector3 start, Vector3 dir)
+    private CharacterData[] FindIntersectionChars(string word, int intersectedCharIndexInWord, Vector3 start, Vector3 dir)
     {
-        int j = FindCharIndexInWord(word, intersectedChar);
         Vector3 pos, scalar;
 
-        scalar = Vector3.Dot(dir, Vector3.up) == 0 ? Vector3.up : Vector3.right; 
+        scalar = Vector3.Dot(dir, _verticalDir) == 0 ? _horizontalDir : _verticalDir;
+
+        List<CharacterData> sameChars = new List<CharacterData>();
 
         // check if intersections.
         for (int i = 0; i < word.Length; i++)
         {
             pos = start + dir * i;
-            // if word close to another or intersect it, return true. 
-            if (j != i && (
-                occupiedPositions.Contains(pos) ||
-                // if intersection above and bottom.
-                occupiedPositions.Contains(pos + scalar) ||
-                occupiedPositions.Contains(pos - scalar)
-                ))
+
+            // miss same char
+            if (intersectedCharIndexInWord == i)
+                continue;
+
+            if (occupiedPositions.Contains(pos))
+
             {
-                return true;
+                Vector3 p = occupiedPositions.Where(x => x == pos).FirstOrDefault();
+                CharacterLogic z = spawnedWords.Where(x => x.wordData.characters.Where(x => x.transform.position == p).FirstOrDefault() != null).FirstOrDefault();
+
+                CharacterData e = z.wordData.characters.Where(x => x.desiredChar.ToString() == word[i].ToString()).FirstOrDefault();
+                if (e != null)
+                {
+                    sameChars.Add(e);
+                    continue;
+                }
+                else
+                {
+                    sameChars = null;
+                    break;
+                }
             }
         }
 
+        return sameChars?.ToArray();
+    }
+
+    private bool HasIntersections(string word, int intersectedCharIndexInWord, Vector3 start, Vector3 dir)
+    {
+        Vector3 pos, scalar;
+
+        scalar = Vector3.Dot(dir, _verticalDir) == 0 ? _horizontalDir : _verticalDir;
+
+        //if intersection begin and end.        
+        //if (occupiedPositions.Contains(start - dir) == true || occupiedPositions.Contains(start + dir * word.Length))
+            //return true;
+
+        // check if intersections.
+        for (int i = 0; i < word.Length; i++)
+        {
+            pos = start + dir * i;
+
+            // miss same char
+            if (intersectedCharIndexInWord == i)
+                continue;
+
+            // if word close to another or intersect it, return true. 
+            if (
+                occupiedPositions.Contains(pos) //||
+                // if intersection around.
+                //occupiedPositions.Contains(pos + scalar) ||
+                //occupiedPositions.Contains(pos - scalar)
+
+                )
+                
+            {
+                Vector3 p = occupiedPositions.Where(x => x == pos).FirstOrDefault();
+                CharacterLogic z = spawnedWords.Where(x => x.wordData.characters.Where(x => x.transform.position == p).FirstOrDefault() != null ).FirstOrDefault();
+                if (z.wordData.characters.Where(x => x.desiredChar.ToString() == word[i].ToString()).FirstOrDefault() != null )
+                {
+                    continue;
+                }
+
+                return true;
+            }
+        }
+        
         return false;
     }
 
@@ -226,7 +332,8 @@ public class CrossWord : MonoBehaviour
     {
         int randomWord = Random.Range(0, wordsLength);
 
-        while (chosenWords.Contains(randomWord) == true)
+        //while (spawnedWords.Contains(randomWord) == true)
+        while (spawnedWords.Where(x => x.wordData.wordIndex == randomWord).FirstOrDefault() != null)
         {
             randomWord = Random.Range(0, wordsLength);
         }

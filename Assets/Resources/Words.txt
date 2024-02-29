@@ -54,3 +54,95 @@ consistent and regular backup
 safe and secure
 outdated
 vpn
+to convey the message
+to engage the visitor
+consistency
+typography
+simplicity
+to contribute to
+to be perceived
+a well-designed website
+to creat a great user experience
+usability
+intention
+to achieve smth through
+to evoke emotional responses
+to find a colour palette
+to fit the brand
+to influence the customer's behaviour
+complementary colours
+to command attention
+legible
+still photography
+to capture the spirit of the company
+to retain
+navigation
+a wayfinding system
+to confuse
+whitespace
+to establish a focal point
+compelling 
+grids
+to align elements on the page
+to load the site
+a responsive layout
+ecosystem
+skill sets
+to fit into
+an umbrella term
+web design
+web development
+to overlap
+front-end/back-end development
+layout
+font
+branding
+usability
+integral
+responsive
+adaptive
+to stick to
+clarifying
+synthesizing
+dramatising
+let alone
+to prioritize
+spacing
+visual hierarchy
+to come in
+to stand out
+search bars
+color palette
+content
+consistent
+UI
+logo
+to complement
+bounce rate
+accessibility
+to uncover information
+hidden patterns
+on a broad scale
+to analyze data sets
+BI ( business intelligence)
+Big Data analytics
+predictive models
+statistical algorithms
+what-if analysis
+to make data driven decisions
+a benefit/ a challenge
+revenue opportunities
+customer personalization
+improved operational efficiency
+to provide competitive advantages over rivals
+to collect data from
+to process/ cleanse data
+data mining
+tools and technologies
+to support big data analytics processes
+a data lake
+a data warehouse
+internal systems/ external sources
+streaming analytics applications
+to be deployed on premises
+personalization engines
