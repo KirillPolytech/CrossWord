@@ -1,15 +1,17 @@
+using System;
 using UnityEngine;
 
 public class PlayerCam : MonoBehaviour
 {
     [Range(50, 500)][SerializeField] private int rayDistance = 100;
     [Range(1, 10)][SerializeField] private int scrollSens = 5;
-    [Range(1, 40)][SerializeField] private int fovMin = 20;
-    [Range(100, 300)][SerializeField] private int fovMax = 200;
+    [Range(4, 10)][SerializeField] private int fovMin = 20;
+    [Range(20, 40)][SerializeField] private int fovMax = 30;
+    [Header("MovementSettings")]
+    [Range(0f, 1f)][SerializeField] private float movementSpeed = 1f;
 
-    private float _mouseButton, _mouseScroll;   
+    private float _mouseScroll;
     private Camera _camera;
-    private RaycastHit _hit;
     private Ray _ray;
     private void Awake()
     {
@@ -25,7 +27,6 @@ public class PlayerCam : MonoBehaviour
 
     private void HandleInput()
     {
-        _mouseButton = Input.GetMouseButton(1) ? 1 : 0;
         _mouseScroll = Input.mouseScrollDelta.y;
     }
 
@@ -36,14 +37,7 @@ public class PlayerCam : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (_mouseButton == 0)
-            return;
-
-        _ray = _camera.ScreenPointToRay(Input.mousePosition);
-        Physics.Raycast(transform.position, _ray.direction, out _hit, rayDistance);
-
-        _hit.point = new Vector3(_hit.point.x, _hit.point.y, transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, _hit.point, Time.deltaTime );
+        transform.position += ( Vector3.right * Input.GetAxis("Horizontal") + Vector3.up * Input.GetAxis("Vertical") ) * movementSpeed;
     }
 
     private void OnDrawGizmos()
@@ -51,3 +45,19 @@ public class PlayerCam : MonoBehaviour
         Debug.DrawRay(_ray.origin, _ray.direction * rayDistance, Color.red);
     }
 }
+
+/*
+ *     private float _mouseButton, _mouseScroll;
+    private RaycastHit _hit;
+
+ *         _mouseButton = Input.GetMouseButton(1) ? 1 : 0;
+
+if (_mouseButton == 0)
+    return;
+
+_ray = _camera.ScreenPointToRay(Input.mousePosition);
+Physics.Raycast(transform.position, _ray.direction, out _hit, rayDistance);
+
+_hit.point = new Vector3(_hit.point.x, _hit.point.y, transform.position.z);
+transform.position = Vector3.Lerp(transform.position, _hit.point, Time.deltaTime );
+*/

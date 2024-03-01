@@ -2008,10 +2008,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f5f81cd162270c41a8801680c7129b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayDistance: 100
-  scrollSens: 5
+  rayDistance: 500
+  scrollSens: 1
   fovMin: 1
-  fovMax: 200
+  fovMax: 30
+  movementSpeed: 0.15
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

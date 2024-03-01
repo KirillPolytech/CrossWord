@@ -115,7 +115,6 @@ search bars
 color palette
 content
 consistent
-UI
 logo
 to complement
 bounce rate
