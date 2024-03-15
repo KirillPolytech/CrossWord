@@ -2,6 +2,6 @@ public class WordData
 {
     public int wordIndex = -1;
     public CharacterData[] characters;
-    public wordOrientation orientation;
+    public WordOrientation orientation;
 }
-public enum wordOrientation { vertical, horizontal }
+public enum WordOrientation { vertical, horizontal }

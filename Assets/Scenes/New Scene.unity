@@ -622,7 +622,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 32
+  m_text: 10
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1212,6 +1212,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da804252c135974a956acf9dbe0326a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distanceBetweenBlocks: 1
+  crosswordLength: 7
+  wordIntersection: 2
   canvas: {fileID: 955454364}
   slider: {fileID: 1131786062}
   wordParentPrefab: {fileID: 2688746725597032198, guid: 018ada82fd37d8048af7ee0e939bcee0,
@@ -1220,8 +1223,6 @@ MonoBehaviour:
     type: 3}
   characterColor: {r: 0, g: 0, b: 0, a: 1}
   description: {fileID: 1464592119}
-  distanceBetweenBlocks: 1
-  crosswordLength: 7
   words: {fileID: 4900000, guid: d570b3373401be74589cb80c15b5180e, type: 3}
   descriptions: {fileID: 4900000, guid: d116d65c2e39a434ababd4346b1c3a47, type: 3}
 --- !u!1 &1577382989

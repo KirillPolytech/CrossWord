@@ -68,7 +68,7 @@ public class CrossWord : MonoBehaviour
                 _verticalDir * _crosswordData.distanceBetweenBlocks : 
                 _horizontalDir * _crosswordData.distanceBetweenBlocks;
 
-            wordOrientation currenOrientation = (j + 1) % 2 == 0 ? wordOrientation.vertical : wordOrientation.horizontal;
+            WordOrientation currenOrientation = (j + 1) % 2 == 0 ? WordOrientation.vertical : WordOrientation.horizontal;
 
             _indTest = 0;
             do
@@ -111,8 +111,9 @@ public class CrossWord : MonoBehaviour
                 int index = FindCharIndexInWord(words[wordInd], sameChar.desiredChar);
 
                 
-                CharacterData[] sameChars = FindIntersectionChars(words[wordInd], index, spawnStartPos, wordSpawnDirection);
-                if (sameChars == null || sameChars.Count() == 0 || sameChars.Count() == words[wordInd].Length)
+                CharacterData[] sameChars = FindIntersectionChars(words[wordInd], spawnStartPos, wordSpawnDirection);
+
+                if (sameChars == null || sameChars.Count() >= words[wordInd].Length - _crosswordData.wordIntersection)
                 {
                     continue;
                 }
@@ -194,12 +195,12 @@ public class CrossWord : MonoBehaviour
         if (dir == _verticalDir)
         {
             charLogic.wordData.characters[0].transform.gameObject.GetComponentInChildren<Text>().text = $"{_verticalWordInd + 1}";
-            charLogic.wordData.orientation = wordOrientation.vertical;
+            charLogic.wordData.orientation = WordOrientation.vertical;
         }
         else
         {
             charLogic.wordData.characters[0].transform.gameObject.GetComponentInChildren<Text>().text = $"{_horizontalWordInd + 1}";
-            charLogic.wordData.orientation = wordOrientation.horizontal;
+            charLogic.wordData.orientation = WordOrientation.horizontal;
         }
 
         charLogic.wordData.wordIndex = wordIndex;
@@ -240,10 +241,10 @@ public class CrossWord : MonoBehaviour
         return null;
     }
 
-    private CharacterData[] FindIntersectionChars(string word, int intersectedCharIndexInWord, Vector3 start, Vector3 dir)
+    private CharacterData[] FindIntersectionChars(string word, Vector3 start, Vector3 dir)
     {
         if (occupiedPositions.Contains(start - dir) == true || occupiedPositions.Contains(start + dir * word.Length))
-           return null;
+            return null;
 
         Vector3 pos, perpendicular;
 
@@ -255,36 +256,16 @@ public class CrossWord : MonoBehaviour
         for (int i = 0; i < word.Length; i++)
         {
             pos = start + dir * i;
-
-            // miss same char
-            /*
-            if (intersectedCharIndexInWord == i)
-                continue
-            */
-
-            /*
-            if (occupiedPositions.Contains(pos + perpendicular) ||
-                occupiedPositions.Contains(pos - perpendicular))
-            {
-                sameChars = null;
-                break;
-            } 
-            */
-
-            /*
-            if (occupiedPositions.Contains(pos))
-            {
-                sameChars = null;
-                break;
-            }
-            */
-
             
             if (occupiedPositions.Contains(pos))
             {
+                // find word.
                 CharacterLogic z = spawnedWords.Where(x => x.wordData.characters.Where(x => x.transform.position == pos).FirstOrDefault() != null).FirstOrDefault();
 
-                CharacterData posChar = z.wordData.characters.Where(x => x.desiredChar.ToString() == word[i].ToString()).FirstOrDefault();
+                // check if they have same char.
+                CharacterData posChar = z.wordData.characters.Where(x => 
+                    x.desiredChar.ToString() == word[i].ToString() && x.transform.position == pos).FirstOrDefault();
+
                 if (posChar != null)
                 {
                     sameChars.Add(posChar);
@@ -301,6 +282,7 @@ public class CrossWord : MonoBehaviour
 
         return sameChars?.ToArray();
     }
+
     private int GetRandomWordIndex(int wordsLength)
     {
         int randomWord = Random.Range(0, wordsLength);
@@ -377,3 +359,26 @@ public class CrossWord : MonoBehaviour
      return false;
  }
  */
+
+// miss same char
+/*
+if (intersectedCharIndexInWord == i)
+    continue
+*/
+
+/*
+if (occupiedPositions.Contains(pos + perpendicular) ||
+    occupiedPositions.Contains(pos - perpendicular))
+{
+    sameChars = null;
+    break;
+} 
+*/
+
+/*
+if (occupiedPositions.Contains(pos))
+{
+    sameChars = null;
+    break;
+}
+*/
