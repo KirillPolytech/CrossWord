@@ -8,10 +8,10 @@ public class CharacterData
     public Color color;
     public int charIndex;
     public char desiredChar;
-    public CharacterData(TMP_InputField inputfield, Color c, int ind, char desiredchar, Transform t, string inputfieldText) 
+    public CharacterData(TMP_InputField inputfield, Color c, int ind, char desiredchar, Transform t) 
     {
         inputField = inputfield;
-        inputField.text = ""; //inputfieldText;
+        inputField.text = " ";//desiredchar.ToString();
 
         desiredChar = desiredchar;
 

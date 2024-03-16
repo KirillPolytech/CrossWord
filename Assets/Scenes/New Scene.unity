@@ -1222,7 +1222,6 @@ MonoBehaviour:
   blockPrefab: {fileID: 4779032717168666309, guid: bc73729afd8aaa84fb149ac6978d1757,
     type: 3}
   characterColor: {r: 0, g: 0, b: 0, a: 1}
-  description: {fileID: 1464592119}
   words: {fileID: 4900000, guid: d570b3373401be74589cb80c15b5180e, type: 3}
   descriptions: {fileID: 4900000, guid: d116d65c2e39a434ababd4346b1c3a47, type: 3}
 --- !u!1 &1577382989
@@ -1723,6 +1722,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: []
+  wordDescriptions: {fileID: 1464592119}
+  crosswordData: {fileID: 1490626113}
+  HideUIKey: 282
 --- !u!1 &1969216632
 GameObject:
   m_ObjectHideFlags: 0

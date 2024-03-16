@@ -45,19 +45,3 @@ public class PlayerCam : MonoBehaviour
         Debug.DrawRay(_ray.origin, _ray.direction * rayDistance, Color.red);
     }
 }
-
-/*
- *     private float _mouseButton, _mouseScroll;
-    private RaycastHit _hit;
-
- *         _mouseButton = Input.GetMouseButton(1) ? 1 : 0;
-
-if (_mouseButton == 0)
-    return;
-
-_ray = _camera.ScreenPointToRay(Input.mousePosition);
-Physics.Raycast(transform.position, _ray.direction, out _hit, rayDistance);
-
-_hit.point = new Vector3(_hit.point.x, _hit.point.y, transform.position.z);
-transform.position = Vector3.Lerp(transform.position, _hit.point, Time.deltaTime );
-*/
