@@ -11,7 +11,7 @@ public class CharacterData
     public CharacterData(TMP_InputField inputfield, Color c, int ind, char desiredchar, Transform t) 
     {
         inputField = inputfield;
-        inputField.text = " ";//desiredchar.ToString();
+        inputField.text = desiredchar.ToString();//" ";//desiredchar.ToString();
 
         desiredChar = desiredchar;
 

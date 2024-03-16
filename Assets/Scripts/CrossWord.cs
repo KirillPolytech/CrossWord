@@ -280,24 +280,3 @@ public class CrossWord : MonoBehaviour
         return randomWord;
     }
 }
-
-/*
-CharacterData[] intersectedChars = new CharacterData[sameChars.Count() + 1];                
-for (int i = 0; i < intersectedChars.Length - 1; i++)
-{
-    intersectedChars[i] = sameChars[i];
-}
-
-intersectedChars[intersectedChars.Length - 1] = sameChar;
-*/
-
-/*
-if (sameChars == null || sameChars.Count() >= words[wordInd].Length - _crosswordData.wordIntersection)
-{
-    continue;
-}
-else
-{
-    break;
-}
-*/
