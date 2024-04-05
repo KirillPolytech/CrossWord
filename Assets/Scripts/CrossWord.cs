@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -140,6 +141,9 @@ public class CrossWord : MonoBehaviour
         charLogic.wordDescription = wordDescription;
         charLogic.name = word;
 
+        _occupiedPositions.Add(start - dir);
+        _occupiedPositions.Add(start + dir * word.Length);
+
         Vector3 currentPos;
         CharacterData[] letter = new CharacterData[word.Length];
         for (int f = 0; f < word.Length; f++)
@@ -162,17 +166,20 @@ public class CrossWord : MonoBehaviour
             block.transform.SetLocalPositionAndRotation(currentPos, Quaternion.identity);
             block.name = word[f].ToString();
 
+            CharacterData data = block.AddComponent<CharacterData>();
+
             _occupiedPositions.Add(currentPos);
 
-            letter[f] = new CharacterData(
-                block.GetComponentInChildren<TMP_InputField>(),
-                _crosswordData.characterColor,
-                f,
-                word[f],
-                block.transform
-                );
+            data.text = block.GetComponentInChildren<TextMeshProUGUI>();
+            data.color = _crosswordData.characterColor;
+            data.charIndex = f;
+            data.desiredChar = word[f];
+            data.characterLogic = charLogic;
+            data.meshRenderer = block.GetComponentInChildren<MeshRenderer>();
 
-            letter[f].inputField.onValueChanged.AddListener((s) => charLogic.CheckWordCompletion());
+            data.text.text = "";
+
+            letter[f] = data;
         }
 
         charLogic.wordData.characters = letter;
@@ -228,7 +235,7 @@ public class CrossWord : MonoBehaviour
 
     private CharacterData[] FindIntersectionChars(string word, Vector3 start, Vector3 dir)
     {
-        if (_occupiedPositions.Contains(start - dir) == true || _occupiedPositions.Contains(start + dir * word.Length))
+        if (_occupiedPositions.Contains(start - dir) == true || _occupiedPositions.Contains(start + dir * word.Length ))
             return null;
 
         Vector3 pos, perpendicular;
@@ -246,6 +253,12 @@ public class CrossWord : MonoBehaviour
             {
                 // find word.
                 CharacterLogic z = _spawnedWords.Where(x => x.wordData.characters.Where(x => x.transform.position == pos).FirstOrDefault() != null).FirstOrDefault();
+
+                if(z == null)
+                {
+                    sameChars = null;
+                    break;
+                }
 
                 // check if they have same char.
                 CharacterData posChar = z.wordData.characters.Where(x => 

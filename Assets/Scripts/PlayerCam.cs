@@ -13,6 +13,7 @@ public class PlayerCam : MonoBehaviour
     private float _mouseScroll;
     private Camera _camera;
     private Ray _ray;
+    private RaycastHit _hit;
     private void Awake()
     {
         _camera = GetComponent<Camera>();
@@ -23,6 +24,7 @@ public class PlayerCam : MonoBehaviour
         HandleInput();
         HandleMovement();
         HandleScroll();
+        CastRay();
     }
 
     private void HandleInput()
@@ -38,6 +40,21 @@ public class PlayerCam : MonoBehaviour
     private void HandleMovement()
     {
         transform.position += ( Vector3.right * Input.GetAxis("Horizontal") + Vector3.up * Input.GetAxis("Vertical") ) * movementSpeed;
+    }
+
+    private void CastRay()
+    {
+        if (Input.GetButton("Fire1") == false)
+            return;
+
+        _ray = _camera.ScreenPointToRay(Input.mousePosition);
+
+        Physics.Raycast(_ray, out _hit, rayDistance);
+
+        if (_hit.collider == null || _hit.collider.gameObject.TryGetComponent(out CharacterData data) == false)
+            return;
+
+        data.OpenPanel();
     }
 
     private void OnDrawGizmos()
