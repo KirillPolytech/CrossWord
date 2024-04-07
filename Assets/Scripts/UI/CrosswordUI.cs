@@ -10,14 +10,15 @@ public class CrosswordUI : MonoBehaviour
     [SerializeField] private CrosswordData crosswordData;
     [SerializeField] private TMP_InputField wordInputMenu;
 
-    public KeyCode HideUIKey = KeyCode.F1;
-
-    private string[] descriptions;
-    private int wordLength = 0;
-    private CharacterLogic characterLogic;
+    private string[] _descriptions;
+    private int _wordLength = 0;
+    private CharacterLogic _characterLogic;
     private bool _isInputMenuOpened = false;
+    private InputHandler _inputHandler;
     private void Awake()
     {
+        _inputHandler = FindAnyObjectByType<InputHandler>();    
+
         wordInputMenu.gameObject.SetActive(false);
 
         UI = new GameObject[transform.childCount];
@@ -26,20 +27,20 @@ public class CrosswordUI : MonoBehaviour
             UI[i] = transform.GetChild(i).gameObject;
         }
 
-        descriptions = crosswordData.descriptions.text.Split("\r\n");
+        _descriptions = crosswordData.descriptions.text.Split("\r\n");
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(HideUIKey))
+        if (Input.GetKeyDown(_inputHandler.HideInGameUIKey))
         {
-            for (int i = 0; i < UI.Length; i++)
+            foreach (var t in UI)
             {
-                UI[i].SetActive(!UI[i].activeSelf);
+                t.SetActive(!t.activeSelf);
             }
         }   
 
-        if (Input.GetMouseButtonDown(1))
+        if (_inputHandler.RightMouseButton)
         {
             CloseInputPanel();
         }
@@ -52,31 +53,31 @@ public class CrosswordUI : MonoBehaviour
 
         _isInputMenuOpened = true;
 
-        characterLogic = logic;
+        _characterLogic = logic;
 
         wordInputMenu.onValueChanged.RemoveAllListeners();
 
         wordInputMenu.gameObject.SetActive(true);
 
-        wordLength = logic.wordData.characters.Length;
+        _wordLength = logic.wordData.characters.Length;
 
         CharacterData[] cachedData = logic.wordData.characters;
 
         UnityEvent<int, string> e = new UnityEvent<int, string>();
-        e.AddListener((d, s) => LimitText(d, s));
+        e.AddListener(LimitText);
 
         UnityEvent<string, CharacterData[]> f = new UnityEvent<string, CharacterData[]>();
-        f.AddListener((s, d) => UpdateText(s, d));
+        f.AddListener(UpdateText);
 
-        wordInputMenu.onValueChanged.AddListener( (s) => { e.Invoke(wordLength, s); f.Invoke(s, cachedData); logic.CheckWordCompletion();  });
+        wordInputMenu.onValueChanged.AddListener( (s) => { e.Invoke(_wordLength, s); f.Invoke(s, cachedData); logic.CheckWordCompletion();  });
 
         return true;
     }
 
     public void CloseInputPanel()
     {
-        if (characterLogic != null)
-            characterLogic.ChangeWordColor(ColorType.normal);
+        if (_characterLogic != null)
+            _characterLogic.ChangeWordColor(ColorType.normal);
 
         wordInputMenu.onValueChanged.RemoveAllListeners();
 
@@ -87,17 +88,17 @@ public class CrosswordUI : MonoBehaviour
         _isInputMenuOpened = false;
     }
 
-    public void UpdateText(string s, CharacterData[] d)
+    private void UpdateText(string s, CharacterData[] d)
     {
         for (int i = 0; i < d.Length; i++)
         {
             if (i >= s.Length)
             {
-                d[i].text.text = "";
+                d[i].currentChar.text = "";
                 continue;
             }
 
-            d[i].text.text = s[i].ToString().ToLower();
+            d[i].currentChar.text = s[i].ToString().ToLower();
         }
     }
 
@@ -120,16 +121,15 @@ public class CrosswordUI : MonoBehaviour
         {
             if (character.wordData.orientation == WordOrientation.horizontal)
             {
-                horizontalWordDesc += $"{i + 1}) {descriptions[character.wordData.wordIndex]}\n";
+                horizontalWordDesc += $"{i + 1}) {_descriptions[character.wordData.wordIndex]}\n";
                 i++;
             }
             else
             {
-                verticalWordDesc += $"{f + 1}) {descriptions[character.wordData.wordIndex]}\n";
+                verticalWordDesc += $"{f + 1}) {_descriptions[character.wordData.wordIndex]}\n";
                 f++;
             }
         }
-
         wordDescriptions.text = $"{horizontalWordDesc} \n {verticalWordDesc}";
     }
 }

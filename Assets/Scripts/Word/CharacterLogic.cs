@@ -9,9 +9,12 @@ public class CharacterLogic : MonoBehaviour
     private CrosswordUI UI;
     private void Awake()
     {
-        IsCompleted = false;
-
         UI = FindAnyObjectByType<CrosswordUI>();
+    }
+
+    private void Start()
+    {
+        IsCompleted = false;
     }
 
     public void OpenMenu()
@@ -64,7 +67,7 @@ public class CharacterLogic : MonoBehaviour
                 continue;
 
             string str = item.desiredChar.ToString().Trim();
-            string str2 = item.text.text.ToString().Trim();
+            string str2 = item.currentChar.text.ToString().Trim();
 
             //Debug.Log($"InputField: {str2} DesiredChar: {str}");
 
@@ -79,7 +82,7 @@ public class CharacterLogic : MonoBehaviour
             if (item == null)
                 continue;
             
-            item.text.color = Color.green;
+            item.currentChar.color = Color.green;
         }
 
         IsCompleted = true;
@@ -91,5 +94,3 @@ public class CharacterLogic : MonoBehaviour
         Debug.Log("Completed");
     }
 }
-
-public enum ColorType { selected, finished, normal}

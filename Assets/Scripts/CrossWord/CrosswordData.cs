@@ -16,7 +16,7 @@ public class CrosswordData : MonoBehaviour
     public TextAsset descriptions;
     private void Awake()
     {
-        slider.onValueChanged.AddListener( (x) => ChangeLength(x) );
+        slider.onValueChanged.AddListener( ChangeLength );
     }
 
     private void ChangeLength(float x)
