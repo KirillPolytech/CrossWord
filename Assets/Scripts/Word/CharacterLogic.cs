@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider))]
 public class CharacterLogic : MonoBehaviour
 {   
     public WordData wordData = new WordData();
@@ -7,9 +9,33 @@ public class CharacterLogic : MonoBehaviour
     public bool IsCompleted { get; private set; }
 
     private CrosswordUI UI;
-    private void Awake()
+    private BoxCollider _boxCollider;
+
+    public void SetPosition(Vector3 pos)
+    {
+        transform.position = pos;
+    }
+    
+    public void Initialize(Vector3 horDir, Vector3 vertDir, Vector3 dir)
     {
         UI = FindAnyObjectByType<CrosswordUI>();
+        _boxCollider = GetComponent<BoxCollider>();
+        
+        float ind = (float)wordData.characters.Length / 2;
+        float remain = ind % 1 == 0 ? 0.5f : 0;
+        
+        if (dir == horDir)
+        {
+            _boxCollider.size = new Vector3(Mathf.Abs(horDir.x * wordData.characters.Length),1,1);
+            float xc = wordData.characters[(int)ind].transform.position.x ;
+            _boxCollider.center = new Vector3( xc - remain * -Mathf.Sign(xc), transform.GetChild(0).transform.position.y, 0 );
+        }
+        else
+        {
+            _boxCollider.size = new Vector3(1,Mathf.Abs(vertDir.y * wordData.characters.Length),1);
+            float yc = wordData.characters[(int)ind].transform.position.y;
+            _boxCollider.center = new Vector3(transform.GetChild(0).transform.position.x, yc - remain * -Mathf.Sign(yc), 0 );
+        }
     }
 
     private void Start()
@@ -52,7 +78,7 @@ public class CharacterLogic : MonoBehaviour
 
         foreach (var c in wordData.characters)
         {
-            c.meshRenderer.material.color = col;
+            c.MeshRenderer.material.color = col;
         }
     }
 
@@ -66,8 +92,8 @@ public class CharacterLogic : MonoBehaviour
             if (item == null)
                 continue;
 
-            string str = item.desiredChar.ToString().Trim();
-            string str2 = item.currentChar.text.ToString().Trim();
+            string str = item.DesiredChar.ToString().Trim();
+            string str2 = item.CurrentChar.text.Trim();
 
             //Debug.Log($"InputField: {str2} DesiredChar: {str}");
 
@@ -82,7 +108,7 @@ public class CharacterLogic : MonoBehaviour
             if (item == null)
                 continue;
             
-            item.currentChar.color = Color.green;
+            item.CurrentChar.color = Color.green;
         }
 
         IsCompleted = true;

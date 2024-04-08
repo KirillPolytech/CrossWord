@@ -16,6 +16,11 @@ public class CrosswordData : MonoBehaviour
     public TextAsset descriptions;
     private void Awake()
     {
+        GamePreference gamePreference = FindAnyObjectByType<GamePreference>();
+
+        words = gamePreference.ChoosenCrossword;
+        descriptions = gamePreference.ChoosenDescription;
+        
         slider.onValueChanged.AddListener( ChangeLength );
     }
 

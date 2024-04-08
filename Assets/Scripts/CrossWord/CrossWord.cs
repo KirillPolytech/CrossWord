@@ -3,6 +3,8 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
+
 // ReSharper disable All
 
 public class CrossWord : MonoBehaviour
@@ -22,12 +24,14 @@ public class CrossWord : MonoBehaviour
     private void Awake()
     {
         _crosswordUI = FindFirstObjectByType<CrosswordUI>();
-
         _crosswordData = GetComponent<CrosswordData>();
+    }
 
+    private void Start()
+    {
         _words = _crosswordData.words.text.Split("\r\n");
         _descriptions = _crosswordData.descriptions.text.Split("\r\n");
-
+        
         for (int i = 0; i < _words.Length; i++)
             _words[i] = _words[i].ToLower();
     }
@@ -108,7 +112,8 @@ public class CrossWord : MonoBehaviour
                         continue;
                     
                     // initialize start pos.
-                    spawnStartPos = sameChar.transform.localPosition - wordSpawnDirection * WordManipulator.FindCharIndexInWord(words[wordInd], sameChar.desiredChar);
+                    //spawnStartPos = sameChar.transform.localPosition - wordSpawnDirection * WordManipulator.FindCharIndexInWord(words[wordInd], sameChar.desiredChar);
+                    spawnStartPos = sameChar.transform.position - wordSpawnDirection * WordManipulator.FindCharIndexInWord(words[wordInd], sameChar.DesiredChar);
                     // find all intersections.
                     sameChars = FindIntersectionChars(words[wordInd], spawnStartPos, wordSpawnDirection);
 
@@ -145,13 +150,15 @@ public class CrossWord : MonoBehaviour
     {
         // spawn parent.
         CharacterLogic charLogic = Instantiate(_crosswordData.wordParentPrefab, _crosswordData.canvas.transform).GetComponent<CharacterLogic>();
+        //charLogic.SetPosition(start + dir * (word.Length - 1) / 2);
+        
         charLogic.wordDescription = wordDescription;
         charLogic.name = word;
 
         _occupiedPositions.Add(start - dir);
         _occupiedPositions.Add(start + dir * word.Length);
 
-        Vector3 currentPos;
+        Vector3 currentPos = Vector3.zero;
         CharacterData[] letter = new CharacterData[word.Length];
         for (int f = 0; f < word.Length; f++)
         {
@@ -173,24 +180,25 @@ public class CrossWord : MonoBehaviour
             block.transform.SetLocalPositionAndRotation(currentPos, Quaternion.identity);
             block.name = word[f].ToString();
 
-            CharacterData data = block.AddComponent<CharacterData>();
+            CharacterData data = new CharacterData();
 
             _occupiedPositions.Add(currentPos);
 
-            data.currentChar = block.GetComponentInChildren<TextMeshProUGUI>();
-            data.color = _crosswordData.characterColor;
-            data.charIndex = f;
-            data.desiredChar = word[f];
-            data.characterLogic = charLogic;
-            data.meshRenderer = block.GetComponentInChildren<MeshRenderer>();
+            data.CurrentChar = block.GetComponentInChildren<TextMeshProUGUI>();
+            data.CharIndex = f;
+            data.DesiredChar = word[f];
+            data.CharacterLogic = charLogic;
+            data.MeshRenderer = block.GetComponentInChildren<MeshRenderer>();
+            data.gameObject = block;
+            data.transform = block.transform;
 
-            data.currentChar.text = data.desiredChar.ToString();//"";
+            data.CurrentChar.text = data.DesiredChar.ToString();//"";
 
             letter[f] = data;
         }
 
         charLogic.wordData.characters = letter;
-
+        
         if (dir == _verticalDir)
         {
             charLogic.wordData.characters[0].gameObject.GetComponentInChildren<Text>().text = $"{_verticalWordInd + 1}";
@@ -203,6 +211,8 @@ public class CrossWord : MonoBehaviour
         }
 
         charLogic.wordData.wordIndex = wordIndex;
+        charLogic.Initialize(_horizontalDir, _verticalDir, dir);
+
         _spawnedWords.Add(charLogic);
 
         return charLogic;
@@ -249,7 +259,7 @@ public class CrossWord : MonoBehaviour
             }
 
             // check if they have same char.
-            CharacterData posChar = z.wordData.characters.FirstOrDefault(x => x.desiredChar.ToString() == word[i].ToString() && x.transform.position == pos);
+            CharacterData posChar = z.wordData.characters.FirstOrDefault(x => x.DesiredChar.ToString() == word[i].ToString() && x.transform.position == pos);
 
             if (posChar != null)
             {

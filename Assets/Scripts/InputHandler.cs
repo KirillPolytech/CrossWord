@@ -15,6 +15,22 @@ public class InputHandler : MonoBehaviour
     public Vector2 MousePosition { get; private set; }
     public bool LeftMouseButton { get; private set; }
     public bool RightMouseButton { get; private set; }
+
+    private InputHandler _instance;
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(transform.parent.gameObject);
+        }
+        else
+        {
+            Destroy(transform.parent.gameObject);
+            return;
+        }
+    }
+
     private void Update()
     {
         MouseScrollValue = Input.mouseScrollDelta.y;

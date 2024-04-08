@@ -1,1 +1,1 @@
-public enum ColorType { selected, finished, normal }
+public enum WordOrientation { vertical, horizontal }

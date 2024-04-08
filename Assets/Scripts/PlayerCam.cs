@@ -48,10 +48,10 @@ public class PlayerCam : MonoBehaviour
 
         Physics.Raycast(_ray, out _hit, rayDistance);
 
-        if (_hit.collider == null || _hit.collider.gameObject.TryGetComponent(out CharacterData data) == false)
+        if (_hit.collider == null || _hit.collider.gameObject.TryGetComponent(out CharacterLogic data) == false)
             return;
 
-        data.OpenPanel();
+        data.OpenMenu();
     }
 
     private void OnDrawGizmos()

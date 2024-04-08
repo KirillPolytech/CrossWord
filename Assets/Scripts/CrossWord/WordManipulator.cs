@@ -18,6 +18,6 @@ public class WordManipulator
 
     public static CharacterData FindSameCharacter(CharacterData[] word, string nextWord)
     {
-        return word.FirstOrDefault(t => nextWord.Any(t1 => t.desiredChar.ToString() == t1.ToString()));
+        return word.FirstOrDefault(t => nextWord.Any(t1 => t.DesiredChar.ToString() == t1.ToString()));
     }
 }

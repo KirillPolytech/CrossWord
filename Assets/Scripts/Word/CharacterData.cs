@@ -1,17 +1,13 @@
 using TMPro;
 using UnityEngine;
 
-public class CharacterData : MonoBehaviour
+public class CharacterData
 {
-    public CharacterLogic characterLogic;
-    public MeshRenderer meshRenderer;
-    public TextMeshProUGUI currentChar;
-    public Color color;
-    public int charIndex;
-    public char desiredChar;
-
-    public void OpenPanel()
-    {
-        characterLogic.OpenMenu();
-    }   
+    public CharacterLogic CharacterLogic;
+    public int CharIndex;
+    public Transform transform;
+    public GameObject gameObject;
+    public MeshRenderer MeshRenderer;
+    public TextMeshProUGUI CurrentChar;
+    public char DesiredChar;
 }

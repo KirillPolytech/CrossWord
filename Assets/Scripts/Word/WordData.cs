@@ -4,4 +4,3 @@ public class WordData
     public CharacterData[] characters;
     public WordOrientation orientation;
 }
-public enum WordOrientation { vertical, horizontal }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -17,8 +18,11 @@ public class CrosswordUI : MonoBehaviour
     private InputHandler _inputHandler;
     private void Awake()
     {
-        _inputHandler = FindAnyObjectByType<InputHandler>();    
+        _inputHandler = FindAnyObjectByType<InputHandler>(); 
+    }
 
+    private void Start()
+    {
         wordInputMenu.gameObject.SetActive(false);
 
         UI = new GameObject[transform.childCount];
@@ -28,6 +32,7 @@ public class CrosswordUI : MonoBehaviour
         }
 
         _descriptions = crosswordData.descriptions.text.Split("\r\n");
+
     }
 
     private void Update()
@@ -94,11 +99,11 @@ public class CrosswordUI : MonoBehaviour
         {
             if (i >= s.Length)
             {
-                d[i].currentChar.text = "";
+                d[i].CurrentChar.text = "";
                 continue;
             }
 
-            d[i].currentChar.text = s[i].ToString().ToLower();
+            d[i].CurrentChar.text = s[i].ToString().ToLower();
         }
     }
 
