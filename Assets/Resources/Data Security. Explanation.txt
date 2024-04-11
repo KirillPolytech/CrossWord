@@ -1,0 +1,87 @@
+Process of converting information or data into a code to prevent unauthorized access
+Person or entity that is approved or permitted to access certain information or resources
+Data that is readable and unencrypted
+Encrypted data
+Unintended disclosure or exposure of sensitive information or data
+To mix up or jumble data in a way that makes it unreadable or difficult to interpret
+Change or modify data or information
+To convert encrypted data back into its original, readable form
+To reverse the process and convert data or information into its original state
+To secretly capture or access data as it is being transmitted between two parties (Begin with "to")
+To link or connect one thing with another (Begin with "to")
+Encrypted data
+Related to the science of creating and deciphering codes for secure communication
+Planned or meant to be used in a specific way or for a specific purpose
+Having a legitimate or just claim to something
+Very improbable or not expected to happen
+Collection of numerical values used in encryption or other mathematical operations
+Method of trying all possible combinations to break a code or encryption
+Data or information is stored or available for future use
+Status of a package, shipment, or item that is currently being transported from one location to another
+Sequence of symbols
+Confidential or private information that needs to be protected from unauthorized access
+Incidents where sensitive data is exposed, stolen, or accessed without authorization
+Rules and guidelines that organizations must follow to ensure data security and privacy
+Protocol used for secure communication over a computer network
+Protocol that ensures privacy and data integrity between communicating applications
+Deprecated protocol for secure communication over a computer network
+Guidelines and practices that ensure the secure handling and storage of data
+To take into account or think about when making decisions or plans
+Collection of abilities that a person possesses
+To come across or face something, often unexpectedly
+To address or include all aspects of a topic or issue
+Weakness or flaw in a system that can be exploited by attackers
+Type of malicious software that encrypts files and demands payment for their release
+To include or contain a wide range of elements or possibilities
+Protection of sensitive or private information from unauthorized access
+Ensuring that data or resources are accessible when needed
+Accuracy and consistency of data, ensuring that it has not been tampered with
+To concentrate attention or effort on a specific task or objective (Begin with "to")
+To make certain or secure something
+To encircle or encompass something
+Risk of data being altered or tampered with
+Result or consequence of a particular action or event
+Established guidelines and regulations that promote data security (Не подходит)
+To take preventive action or anticipate problems before they occur (Begin with "to")
+To increase the amount of data that can be stored (Begin with "to")
+Software or systems used to organize, store, and retrieve data efficiently
+Irreversible loss or destruction of data (Не подходит)
+To keep things steady or in equilibrium.
+To stop or hinder someone from performing a specific action.
+Able to be reached or used easily.
+Capable of being used or operated.
+To accept or act in accordance with a rule, decision, or recommendation.
+Necessary for completeness or functioning.
+Backing up data on a regular basis to maintain data consistency and integrity.
+Protected and free from harm or danger.
+No longer current or in use.
+Secure network connection established over the internet.
+To take someone else's personal information without permission.
+To engage in deceptive or deceitful behavior for personal gain.
+To break laws that protect individuals' confidentiality and personal information.
+Individuals or groups who pose a threat to the security of computer systems or data.
+To accept or support something willingly.
+To go or come into a place.
+To obtain and store information about individuals.
+To imitate or copy the actions or characteristics of someone or something.
+To duplicate or reproduce something exactly.
+To trick or deceive someone.
+To deceive or manipulate someone into doing something.
+To earn someone's trust or belief in your abilities.
+Hyperlink that leads to a website or page designed to harm a user's computer.
+Educating individuals on security risks and training them to recognize and prevent phishing attacks.
+To give someone the authority or power to do something.
+To appear as genuine or authentic software.
+Distinctive indication or characteristic that reveals something.
+To infect a computer with malicious software.
+To expect or foresee something happening.
+At the fundamental or central part of something.
+The most important or significant issue.
+Violation or failure to follow a rule or agreement.
+To impair or harm the ability of something to function properly.
+To make files unusable or damaged.
+To collect or gather information from different sources.
+To protect a device by setting individual, secure access codes.
+To rank or order risks based on their importance or potential impact.
+Taking action to prevent issues before they occur.
+Something that is so obvious that it does not need to be mentioned.

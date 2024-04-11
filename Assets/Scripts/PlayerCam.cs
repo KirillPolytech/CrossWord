@@ -13,6 +13,7 @@ public class PlayerCam : MonoBehaviour
     private Ray _ray;
     private RaycastHit _hit;
     private InputHandler _inputHandler;
+    private CharacterLogic _temp;
     private void Awake()
     {
         _camera = GetComponent<Camera>();
@@ -41,14 +42,32 @@ public class PlayerCam : MonoBehaviour
 
     private void CastRay()
     {
-        if (_inputHandler.LeftMouseButton == false)
-            return;
-
         _ray = _camera.ScreenPointToRay(_inputHandler.MousePosition);
 
         Physics.Raycast(_ray, out _hit, rayDistance);
 
-        if (_hit.collider == null || _hit.collider.gameObject.TryGetComponent(out CharacterLogic data) == false)
+        if (_hit.collider is null || _hit.collider.gameObject.TryGetComponent(out CharacterLogic data) == false)
+        {
+            if (_temp == true)
+                _temp.ChangeWordColor(ColorType.normal);
+            
+            _temp = null;
+            return;
+        }
+
+        if (_temp is null)
+        {
+            _temp = data;
+            data.ChangeWordColor(ColorType.highlighted);
+        }
+        else if (_temp != data)
+        {
+            _temp.ChangeWordColor(ColorType.normal);
+            _temp = data;
+            data.ChangeWordColor(ColorType.highlighted);
+        }
+        
+        if (_inputHandler.LeftMouseButton == false)
             return;
 
         data.OpenMenu();

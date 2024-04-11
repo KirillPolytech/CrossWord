@@ -1,45 +1,54 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class CrosswordUI : MonoBehaviour
 {
-    [SerializeField] private GameObject[] UI;
+    [SerializeField] private GameObject[] ui;
     [SerializeField] private TextMeshProUGUI wordDescriptions;
-    [SerializeField] private CrosswordData crosswordData;
     [SerializeField] private TMP_InputField wordInputMenu;
+    [SerializeField] private Button generateCrosswordButton;
 
-    private string[] _descriptions;
     private int _wordLength = 0;
     private CharacterLogic _characterLogic;
     private bool _isInputMenuOpened = false;
+    
     private InputHandler _inputHandler;
+    private CrossWord _crossWord;
+    private InGameMenu _inGameMenu;
+    private GamePreference _gamePreference;
     private void Awake()
     {
-        _inputHandler = FindAnyObjectByType<InputHandler>(); 
+        _inputHandler = FindAnyObjectByType<InputHandler>();
+        _crossWord = FindAnyObjectByType<CrossWord>();
+        _inGameMenu = FindAnyObjectByType<InGameMenu>();
+        _gamePreference = FindAnyObjectByType<GamePreference>();
+        
+        generateCrosswordButton.onClick.AddListener( () =>
+        {
+            _crossWord.Generate();
+            SetDescription(_crossWord.SpawnedWords, _inGameMenu.IsHintsEnabled);
+        });
     }
 
     private void Start()
     {
         wordInputMenu.gameObject.SetActive(false);
 
-        UI = new GameObject[transform.childCount];
+        ui = new GameObject[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
         {
-            UI[i] = transform.GetChild(i).gameObject;
+            ui[i] = transform.GetChild(i).gameObject;
         }
-
-        _descriptions = crosswordData.descriptions.text.Split("\r\n");
-
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(_inputHandler.HideInGameUIKey))
         {
-            foreach (var t in UI)
+            foreach (var t in ui)
             {
                 t.SetActive(!t.activeSelf);
             }
@@ -64,9 +73,9 @@ public class CrosswordUI : MonoBehaviour
 
         wordInputMenu.gameObject.SetActive(true);
 
-        _wordLength = logic.wordData.characters.Length;
+        _wordLength = logic.WordData.Characters.Length;
 
-        CharacterData[] cachedData = logic.wordData.characters;
+        CharacterData[] cachedData = logic.WordData.Characters;
 
         UnityEvent<int, string> e = new UnityEvent<int, string>();
         e.AddListener(LimitText);
@@ -75,13 +84,15 @@ public class CrosswordUI : MonoBehaviour
         f.AddListener(UpdateText);
 
         wordInputMenu.onValueChanged.AddListener( (s) => { e.Invoke(_wordLength, s); f.Invoke(s, cachedData); logic.CheckWordCompletion();  });
+        
+        _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.PauseState);
 
         return true;
     }
 
     public void CloseInputPanel()
     {
-        if (_characterLogic != null)
+        if (_characterLogic == true)
             _characterLogic.ChangeWordColor(ColorType.normal);
 
         wordInputMenu.onValueChanged.RemoveAllListeners();
@@ -91,8 +102,44 @@ public class CrosswordUI : MonoBehaviour
         wordInputMenu.text = string.Empty;
 
         _isInputMenuOpened = false;
+        
+        _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.ActiveState);
+    }
+    
+    private void SetDescription(HashSet<CharacterLogic> spawnedWords, bool hints)
+    {
+        string horizontalWordDesc = "Horizontal:\n", verticalWordDesc = "Vertical:\n";       
+
+        int i = 0, f = 0;
+        foreach (CharacterLogic word in spawnedWords)
+        {
+            if (word.WordData.Orientation == WordOrientation.horizontal)
+            {
+                if (hints == true)
+                    horizontalWordDesc += $"{i + 1}) {word.WordData.WordDescription} ({word.WordData.Word})\n";
+                else
+                    horizontalWordDesc += $"{i + 1}) {word.WordData.WordDescription}\n";
+                
+                i++;
+            }
+            else
+            {
+                if (hints)
+                    verticalWordDesc += $"{f + 1}) {word.WordData.WordDescription} ({word.WordData.Word})\n";
+                else
+                    verticalWordDesc += $"{f + 1}) {word.WordData.WordDescription}\n";
+                
+                f++;
+            }
+        }
+        wordDescriptions.text = $"{horizontalWordDesc} \n {verticalWordDesc}";
     }
 
+    public void UpdateDescription( )
+    {
+        SetDescription(_crossWord.SpawnedWords, _inGameMenu.IsHintsEnabled);
+    }
+    
     private void UpdateText(string s, CharacterData[] d)
     {
         for (int i = 0; i < d.Length; i++)
@@ -115,26 +162,5 @@ public class CrosswordUI : MonoBehaviour
         int value = Mathf.Clamp(wordLength, 0, wordLength);
         value = Mathf.Clamp(value, 0, s.Length);
         wordInputMenu.text = s.Substring(0, value);
-    }
-
-    public void SetDescription(HashSet<CharacterLogic> spawnedWords)
-    {
-        string horizontalWordDesc = "Horizontal:\n", verticalWordDesc = "Vertical:\n";       
-
-        int i = 0, f = 0;
-        foreach (CharacterLogic character in spawnedWords)
-        {
-            if (character.wordData.orientation == WordOrientation.horizontal)
-            {
-                horizontalWordDesc += $"{i + 1}) {_descriptions[character.wordData.wordIndex]}\n";
-                i++;
-            }
-            else
-            {
-                verticalWordDesc += $"{f + 1}) {_descriptions[character.wordData.wordIndex]}\n";
-                f++;
-            }
-        }
-        wordDescriptions.text = $"{horizontalWordDesc} \n {verticalWordDesc}";
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -5,15 +6,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-// ReSharper disable All
-
 public class CrossWord : MonoBehaviour
 {
-    private readonly HashSet<Vector3> _occupiedPositions = new HashSet<Vector3>();
-    private readonly HashSet<CharacterLogic> _spawnedWords = new HashSet<CharacterLogic>();
+    public readonly HashSet<CharacterLogic> SpawnedWords = new HashSet<CharacterLogic>();
 
+    private readonly HashSet<Vector3> _occupiedPositions = new HashSet<Vector3>();
+    
     private CrosswordData _crosswordData;
-    private CrosswordUI _crosswordUI;
     
     private string[] _words, _descriptions;
     private int[] _horizontalWordIndexes, _verticalWordIndexes;
@@ -23,7 +22,6 @@ public class CrossWord : MonoBehaviour
     private readonly Vector3 _horizontalDir = Vector3.right, _verticalDir = -Vector3.up;
     private void Awake()
     {
-        _crosswordUI = FindFirstObjectByType<CrosswordUI>();
         _crosswordData = GetComponent<CrosswordData>();
     }
 
@@ -31,6 +29,9 @@ public class CrossWord : MonoBehaviour
     {
         _words = _crosswordData.words.text.Split("\r\n");
         _descriptions = _crosswordData.descriptions.text.Split("\r\n");
+
+        if (_words.Length != _descriptions.Length)
+            throw new Exception("words and description lengths are not the same");
         
         for (int i = 0; i < _words.Length; i++)
             _words[i] = _words[i].ToLower();
@@ -45,13 +46,6 @@ public class CrossWord : MonoBehaviour
         _verticalWordIndexes = new int[_crosswordData.crosswordLength + 1];
 
         StartGeneration(wordInd, _words, _descriptions);
-
-        if (_crosswordUI == null)
-        {
-            Debug.LogWarning("CrosswordUI null");
-            
-        }
-        _crosswordUI.SetDescription(_spawnedWords);
     }
 
     private void Destroy()
@@ -62,18 +56,18 @@ public class CrossWord : MonoBehaviour
         }
 
         _occupiedPositions.Clear();
-        _spawnedWords.Clear();
+        SpawnedWords.Clear();
         _horizontalWordInd = _verticalWordInd = 0;
     }
 
-    private void StartGeneration(int wordInd, string[] words, string[] descriptions)
+    private void StartGeneration(int wordInd, IReadOnlyList<string> words, IReadOnlyList<string> descriptions)
     {
         Vector3 spawnStartPos = Vector3.zero;
         Vector3 wordSpawnDirection = _verticalDir * _crosswordData.distanceBetweenBlocks;
         CharacterData sameChar = null;
 
         CharacterLogic word = SpawnWord(spawnStartPos, wordSpawnDirection, words[wordInd], descriptions[wordInd], null, wordInd);
-        _spawnedWords.Add(word);
+        SpawnedWords.Add(word);
         _verticalWordIndexes[_verticalWordInd++] = wordInd;
         _verticalWordInd = Mathf.Clamp(_verticalWordInd, 0, _verticalWordIndexes.Length - 1);
 
@@ -88,25 +82,25 @@ public class CrossWord : MonoBehaviour
             _indTest = 0;
             do
             {
-                wordInd = Mathf.Clamp(_indTest, 0, words.Length - 1);
+                wordInd = Mathf.Clamp(_indTest, 0, words.Count - 1);
 
-                if (_indTest >= words.Length - 1)
+                if (_indTest >= words.Count - 1)
                 {
                     Debug.LogWarning("cant find word");
                     break;
                 }
 
-                if (_spawnedWords.FirstOrDefault(x => x.wordData.wordIndex == wordInd) != null)
+                if (SpawnedWords.FirstOrDefault(x => x.WordData.WordIndex == wordInd) != null)
                     continue;
 
                 // find relevant word.
                 CharacterData[] sameChars = null;
-                for (int i = 0; i < _spawnedWords.Count; i++)
+                for (int i = 0; i < SpawnedWords.Count; i++)
                 {
-                    if (_spawnedWords.ElementAt(i).wordData.orientation == currenOrientation)
+                    if (SpawnedWords.ElementAt(i).WordData.Orientation == currenOrientation)
                         continue;
 
-                    sameChar = WordManipulator.FindSameCharacter(_spawnedWords.ElementAt(i).wordData.characters, words[wordInd]);
+                    sameChar = WordManipulator.FindSameCharacter(SpawnedWords.ElementAt(i).WordData.Characters, words[wordInd]);
 
                     if (sameChar == null) 
                         continue;
@@ -129,7 +123,7 @@ public class CrossWord : MonoBehaviour
                 // spawn word.
                 word = SpawnWord(spawnStartPos, wordSpawnDirection, words[wordInd], descriptions[wordInd], sameChars, wordInd);
 
-                _spawnedWords.Add(word);
+                SpawnedWords.Add(word);
 
                 if ((j + 1) % 2 == 0)
                 {
@@ -142,7 +136,7 @@ public class CrossWord : MonoBehaviour
                     _horizontalWordInd = Mathf.Clamp(_horizontalWordInd, 0, _horizontalWordIndexes.Length - 1);
                 }
                 break;
-            } while (_indTest++ <= words.Length - 1);            
+            } while (_indTest++ <= words.Count - 1);            
         }
     }
 
@@ -150,9 +144,7 @@ public class CrossWord : MonoBehaviour
     {
         // spawn parent.
         CharacterLogic charLogic = Instantiate(_crosswordData.wordParentPrefab, _crosswordData.canvas.transform).GetComponent<CharacterLogic>();
-        //charLogic.SetPosition(start + dir * (word.Length - 1) / 2);
         
-        charLogic.wordDescription = wordDescription;
         charLogic.name = word;
 
         _occupiedPositions.Add(start - dir);
@@ -187,7 +179,6 @@ public class CrossWord : MonoBehaviour
             data.CurrentChar = block.GetComponentInChildren<TextMeshProUGUI>();
             data.CharIndex = f;
             data.DesiredChar = word[f];
-            data.CharacterLogic = charLogic;
             data.MeshRenderer = block.GetComponentInChildren<MeshRenderer>();
             data.gameObject = block;
             data.transform = block.transform;
@@ -197,23 +188,26 @@ public class CrossWord : MonoBehaviour
             letter[f] = data;
         }
 
-        charLogic.wordData.characters = letter;
+        charLogic.WordData.Characters = letter;
+        
+        charLogic.WordData.Word = word;
+        charLogic.WordData.WordDescription = wordDescription;
         
         if (dir == _verticalDir)
         {
-            charLogic.wordData.characters[0].gameObject.GetComponentInChildren<Text>().text = $"{_verticalWordInd + 1}";
-            charLogic.wordData.orientation = WordOrientation.vertical;
+            charLogic.WordData.Characters[0].gameObject.GetComponentInChildren<Text>().text = $"{_verticalWordInd + 1}";
+            charLogic.WordData.Orientation = WordOrientation.vertical;
         }
         else
         {
-            charLogic.wordData.characters[0].gameObject.GetComponentInChildren<Text>().text = $"{_horizontalWordInd + 1}";
-            charLogic.wordData.orientation = WordOrientation.horizontal;
+            charLogic.WordData.Characters[0].gameObject.GetComponentInChildren<Text>().text = $"{_horizontalWordInd + 1}";
+            charLogic.WordData.Orientation = WordOrientation.horizontal;
         }
 
-        charLogic.wordData.wordIndex = wordIndex;
+        charLogic.WordData.WordIndex = wordIndex;
         charLogic.Initialize(_horizontalDir, _verticalDir, dir);
 
-        _spawnedWords.Add(charLogic);
+        SpawnedWords.Add(charLogic);
 
         return charLogic;
     }  
@@ -250,7 +244,7 @@ public class CrossWord : MonoBehaviour
                 continue;
             
             // find word.
-            CharacterLogic z = _spawnedWords.FirstOrDefault(x => x.wordData.characters.FirstOrDefault(y => y.transform.position == pos) != null);
+            CharacterLogic z = SpawnedWords.FirstOrDefault(x => x.WordData.Characters.FirstOrDefault(y => y.transform.position == pos) != null);
 
             if(z == null)
             {
@@ -259,7 +253,7 @@ public class CrossWord : MonoBehaviour
             }
 
             // check if they have same char.
-            CharacterData posChar = z.wordData.characters.FirstOrDefault(x => x.DesiredChar.ToString() == word[i].ToString() && x.transform.position == pos);
+            CharacterData posChar = z.WordData.Characters.FirstOrDefault(x => x.DesiredChar.ToString() == word[i].ToString() && x.transform.position == pos);
 
             if (posChar != null)
             {
@@ -278,7 +272,7 @@ public class CrossWord : MonoBehaviour
     {
         int randomWord = Random.Range(0, wordsLength);
 
-        while (_spawnedWords.FirstOrDefault(x => x.wordData.wordIndex == randomWord) != null)
+        while (SpawnedWords.FirstOrDefault(x => x.WordData.WordIndex == randomWord) != null)
         {
             randomWord = Random.Range(0, wordsLength);
         }

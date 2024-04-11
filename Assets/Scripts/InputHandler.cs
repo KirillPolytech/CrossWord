@@ -4,8 +4,9 @@ using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
     public event Action UpdateCall;
+    public event Action AlwaysUpdateCall;
 
-    public bool IsEnabled = false;
+    public bool IsEnabled { get; set; }
 
     public KeyCode HideInGameUIKey { get; private set; } = KeyCode.F1;
     public KeyCode InteractInGameMenu { get; private set; } = KeyCode.Escape;
@@ -42,5 +43,7 @@ public class InputHandler : MonoBehaviour
         
         if (IsEnabled == true)
             UpdateCall?.Invoke();
+        
+        AlwaysUpdateCall?.Invoke();
     }
 }

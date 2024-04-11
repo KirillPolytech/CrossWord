@@ -20,6 +20,8 @@ public class GamePreference : MonoBehaviour
             Destroy(transform.parent.gameObject);
             return;
         }
+
+        Application.targetFrameRate = 60;
         
         _inputHandler = FindAnyObjectByType<InputHandler>();
 

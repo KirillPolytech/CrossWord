@@ -1,1 +1,1 @@
-public enum ColorType { selected, finished, normal }
+public enum ColorType { highlighted, selected, finished, normal }

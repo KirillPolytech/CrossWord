@@ -1,6 +1,8 @@
 public class WordData
 {
-    public int wordIndex = -1;
-    public CharacterData[] characters;
-    public WordOrientation orientation;
+    public int WordIndex = -1;
+    public string Word;
+    public string WordDescription;
+    public CharacterData[] Characters;
+    public WordOrientation Orientation;
 }

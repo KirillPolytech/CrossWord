@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CrosswordFiles:
-  - Words: {fileID: 4900000, guid: d570b3373401be74589cb80c15b5180e, type: 3}
-    Description: {fileID: 4900000, guid: d116d65c2e39a434ababd4346b1c3a47, type: 3}
+  - Words: {fileID: 4900000, guid: 2d259ff54babfc844a735700a091b771, type: 3}
+    Description: {fileID: 4900000, guid: 4d02cb72b0108474c9a1832107bc693b, type: 3}
 --- !u!1 &5024184055999611155
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,7 +125,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9ed393150d4c4846b5ccdbf3a8755c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsEnabled: 0
 --- !u!1 &8933341945072632881
 GameObject:
   m_ObjectHideFlags: 0

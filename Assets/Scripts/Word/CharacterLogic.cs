@@ -1,39 +1,32 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
 public class CharacterLogic : MonoBehaviour
 {   
-    public WordData wordData = new WordData();
-    public string wordDescription;
+    public readonly WordData WordData = new WordData();
     public bool IsCompleted { get; private set; }
+    public bool IsSelected { get; private set; }
 
-    private CrosswordUI UI;
+    private CrosswordUI _ui;
     private BoxCollider _boxCollider;
-
-    public void SetPosition(Vector3 pos)
-    {
-        transform.position = pos;
-    }
-    
     public void Initialize(Vector3 horDir, Vector3 vertDir, Vector3 dir)
     {
-        UI = FindAnyObjectByType<CrosswordUI>();
+        _ui = FindAnyObjectByType<CrosswordUI>();
         _boxCollider = GetComponent<BoxCollider>();
         
-        float ind = (float)wordData.characters.Length / 2;
+        float ind = (float)WordData.Characters.Length / 2;
         float remain = ind % 1 == 0 ? 0.5f : 0;
         
         if (dir == horDir)
         {
-            _boxCollider.size = new Vector3(Mathf.Abs(horDir.x * wordData.characters.Length),1,1);
-            float xc = wordData.characters[(int)ind].transform.position.x ;
+            _boxCollider.size = new Vector3(Mathf.Abs(horDir.x * WordData.Characters.Length),1,1);
+            float xc = WordData.Characters[(int)ind].transform.position.x ;
             _boxCollider.center = new Vector3( xc - remain * -Mathf.Sign(xc), transform.GetChild(0).transform.position.y, 0 );
         }
         else
         {
-            _boxCollider.size = new Vector3(1,Mathf.Abs(vertDir.y * wordData.characters.Length),1);
-            float yc = wordData.characters[(int)ind].transform.position.y;
+            _boxCollider.size = new Vector3(1,Mathf.Abs(vertDir.y * WordData.Characters.Length),1);
+            float yc = WordData.Characters[(int)ind].transform.position.y;
             _boxCollider.center = new Vector3(transform.GetChild(0).transform.position.x, yc - remain * -Mathf.Sign(yc), 0 );
         }
     }
@@ -48,7 +41,9 @@ public class CharacterLogic : MonoBehaviour
         if (IsCompleted == true)
             return;
 
-        bool isOpened = UI.OpenInputPanel(this);
+        bool isOpened = _ui.OpenInputPanel(this);
+
+        IsSelected = isOpened;
 
         if (isOpened == true)
             ChangeWordColor(ColorType.selected);
@@ -59,24 +54,16 @@ public class CharacterLogic : MonoBehaviour
         if (IsCompleted == true) 
             return;
 
-        Color col;
-        switch (color)
+        Color col = color switch
         {
-            case ColorType.selected:
-                col = Color.yellow;
-                break;
-            case ColorType.finished:
-                col = Color.green;
-                break;
-            case ColorType.normal:
-                col = Color.white;
-                break;
-            default: 
-                col = Color.white;
-                break;
-        }
+            ColorType.selected => Color.yellow,
+            ColorType.finished => Color.green,
+            ColorType.normal => Color.white,
+            ColorType.highlighted => Color.blue,
+            _ => Color.white
+        };
 
-        foreach (var c in wordData.characters)
+        foreach (var c in WordData.Characters)
         {
             c.MeshRenderer.material.color = col;
         }
@@ -87,7 +74,7 @@ public class CharacterLogic : MonoBehaviour
         if (IsCompleted == true)
             return;
 
-        foreach (var item in wordData.characters)
+        foreach (var item in WordData.Characters)
         {
             if (item == null)
                 continue;
@@ -103,7 +90,7 @@ public class CharacterLogic : MonoBehaviour
             }                
         }
 
-        foreach (var item in wordData.characters)
+        foreach (var item in WordData.Characters)
         {
             if (item == null)
                 continue;
@@ -113,7 +100,7 @@ public class CharacterLogic : MonoBehaviour
 
         IsCompleted = true;
 
-        UI.CloseInputPanel();
+        _ui.CloseInputPanel();
 
         ChangeWordColor(ColorType.finished);
 
