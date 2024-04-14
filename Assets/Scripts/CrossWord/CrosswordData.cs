@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class CrosswordData : MonoBehaviour
 {
@@ -14,10 +15,10 @@ public class CrosswordData : MonoBehaviour
     public GameObject blockPrefab;
     public TextAsset words;
     public TextAsset descriptions;
-    private void Awake()
-    {
-        GamePreference gamePreference = FindAnyObjectByType<GamePreference>();
 
+    [Inject]
+    public void Construct(GamePreference gamePreference)
+    {
         words = gamePreference.ChoosenCrossword;
         descriptions = gamePreference.ChoosenDescription;
         

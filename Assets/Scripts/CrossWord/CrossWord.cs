@@ -6,27 +6,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(CrosswordData))]
 public class CrossWord : MonoBehaviour
 {
     public readonly HashSet<CharacterLogic> SpawnedWords = new HashSet<CharacterLogic>();
 
     private readonly HashSet<Vector3> _occupiedPositions = new HashSet<Vector3>();
-    
     private CrosswordData _crosswordData;
-    
     private string[] _words, _descriptions;
     private int[] _horizontalWordIndexes, _verticalWordIndexes;
     private int _horizontalWordInd, _verticalWordInd;
     private int _indTest = 0;
-
     private readonly Vector3 _horizontalDir = Vector3.right, _verticalDir = -Vector3.up;
-    private void Awake()
-    {
-        _crosswordData = GetComponent<CrosswordData>();
-    }
-
     private void Start()
     {
+        _crosswordData = GetComponent<CrosswordData>();
+        
         _words = _crosswordData.words.text.Split("\r\n");
         _descriptions = _crosswordData.descriptions.text.Split("\r\n");
 
@@ -87,7 +82,9 @@ public class CrossWord : MonoBehaviour
                 if (_indTest >= words.Count - 1)
                 {
                     Debug.LogWarning("cant find word");
-                    break;
+                    Destroy();
+                    Generate();
+                    return;
                 }
 
                 if (SpawnedWords.FirstOrDefault(x => x.WordData.WordIndex == wordInd) != null)
@@ -106,7 +103,6 @@ public class CrossWord : MonoBehaviour
                         continue;
                     
                     // initialize start pos.
-                    //spawnStartPos = sameChar.transform.localPosition - wordSpawnDirection * WordManipulator.FindCharIndexInWord(words[wordInd], sameChar.desiredChar);
                     spawnStartPos = sameChar.transform.position - wordSpawnDirection * WordManipulator.FindCharIndexInWord(words[wordInd], sameChar.DesiredChar);
                     // find all intersections.
                     sameChars = FindIntersectionChars(words[wordInd], spawnStartPos, wordSpawnDirection);

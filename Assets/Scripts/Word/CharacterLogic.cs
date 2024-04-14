@@ -9,6 +9,7 @@ public class CharacterLogic : MonoBehaviour
 
     private CrosswordUI _ui;
     private BoxCollider _boxCollider;
+    
     public void Initialize(Vector3 horDir, Vector3 vertDir, Vector3 dir)
     {
         _ui = FindAnyObjectByType<CrosswordUI>();

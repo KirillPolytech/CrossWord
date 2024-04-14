@@ -22,19 +22,27 @@ public class InGameMenu : MonoBehaviour
         _crosswordUI = FindAnyObjectByType<CrosswordUI>();
 
         inGameMenu.enabled = false;
-
-        _inputHandler.AlwaysUpdateCall += UpdateInGameMenuState;
         
         hintButton.onClick.AddListener(_crosswordUI.UpdateDescription);
         continueButton.onClick.AddListener(ChangeInGameMenuState);
-        ExitButton.onClick.AddListener(() => SceneLoader.LoadScene(1));
+        ExitButton.onClick.AddListener(() => SceneLoader.LoadScene(SceneLoader.MenuScene));
         
         hintButtonText.text = "Hints: off";
     }
 
+    private void OnEnable()
+    {
+        _inputHandler.AlwaysUpdateCall += UpdateInGameMenuState;
+    }
+
+    private void OnDisable()
+    {
+        _inputHandler.AlwaysUpdateCall -= UpdateInGameMenuState;
+    }
+
     private void UpdateInGameMenuState()
     {
-        if (Input.GetKeyDown(_inputHandler.InteractInGameMenu) == false || _gamePreference.GameStateMachine.CurrentState == _gamePreference.GameStateMachine.PauseState)
+        if (Input.GetKeyDown(_inputHandler.InteractInGameMenu) == false) //|| _gamePreference.GameStateMachine.CurrentState == _gamePreference.GameStateMachine.PauseState)
             return;
 
         ChangeInGameMenuState();

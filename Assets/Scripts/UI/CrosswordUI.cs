@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
+using Zenject;
 
 public class CrosswordUI : MonoBehaviour
 {
     [SerializeField] private GameObject[] ui;
+    [SerializeField] private TextMeshProUGUI tutorial;
     [SerializeField] private TextMeshProUGUI wordDescriptions;
     [SerializeField] private TMP_InputField wordInputMenu;
-    [SerializeField] private Button generateCrosswordButton;
 
     private int _wordLength = 0;
     private CharacterLogic _characterLogic;
@@ -19,18 +18,26 @@ public class CrosswordUI : MonoBehaviour
     private CrossWord _crossWord;
     private InGameMenu _inGameMenu;
     private GamePreference _gamePreference;
-    private void Awake()
+
+    [Inject]
+    public void Construct( InputHandler inputHandler, CrossWord crossWord, InGameMenu inGameMenu, GamePreference gamePreference)
     {
-        _inputHandler = FindAnyObjectByType<InputHandler>();
-        _crossWord = FindAnyObjectByType<CrossWord>();
-        _inGameMenu = FindAnyObjectByType<InGameMenu>();
-        _gamePreference = FindAnyObjectByType<GamePreference>();
-        
-        generateCrosswordButton.onClick.AddListener( () =>
-        {
-            _crossWord.Generate();
-            SetDescription(_crossWord.SpawnedWords, _inGameMenu.IsHintsEnabled);
-        });
+        _inputHandler = inputHandler;
+        _crossWord = crossWord;
+        _inGameMenu = inGameMenu;
+        _gamePreference = gamePreference;
+
+        tutorial.text = $"Generate crossword key: {_inputHandler.GenerateCrosswordKey}";
+    }
+
+    private void OnEnable()
+    {
+        _inputHandler.AlwaysUpdateCall += HandleInput;
+    }
+
+    private void OnDisable()
+    {
+        _inputHandler.AlwaysUpdateCall -= HandleInput;
     }
 
     private void Start()
@@ -44,8 +51,14 @@ public class CrosswordUI : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void HandleInput()
     {
+        if (Input.GetKeyDown(_inputHandler.GenerateCrosswordKey))
+        {
+            _crossWord.Generate();
+            SetDescription(_crossWord.SpawnedWords, _inGameMenu.IsHintsEnabled);
+        }
+        
         if (Input.GetKeyDown(_inputHandler.HideInGameUIKey))
         {
             foreach (var t in ui)
@@ -77,13 +90,12 @@ public class CrosswordUI : MonoBehaviour
 
         CharacterData[] cachedData = logic.WordData.Characters;
 
-        UnityEvent<int, string> e = new UnityEvent<int, string>();
-        e.AddListener(LimitText);
-
-        UnityEvent<string, CharacterData[]> f = new UnityEvent<string, CharacterData[]>();
-        f.AddListener(UpdateText);
-
-        wordInputMenu.onValueChanged.AddListener( (s) => { e.Invoke(_wordLength, s); f.Invoke(s, cachedData); logic.CheckWordCompletion();  });
+        wordInputMenu.onValueChanged.AddListener((s) =>
+        {
+            TextTools.LimitText(_wordLength, s, wordInputMenu); 
+            TextTools.UpdateText(s, cachedData); 
+            logic.CheckWordCompletion();
+        });
         
         _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.PauseState);
 
@@ -138,29 +150,5 @@ public class CrosswordUI : MonoBehaviour
     public void UpdateDescription( )
     {
         SetDescription(_crossWord.SpawnedWords, _inGameMenu.IsHintsEnabled);
-    }
-    
-    private void UpdateText(string s, CharacterData[] d)
-    {
-        for (int i = 0; i < d.Length; i++)
-        {
-            if (i >= s.Length)
-            {
-                d[i].CurrentChar.text = "";
-                continue;
-            }
-
-            d[i].CurrentChar.text = s[i].ToString().ToLower();
-        }
-    }
-
-    private void LimitText(int wordLength, string s)
-    {
-        if (s == null || s.Length <= 0)
-            return;
-
-        int value = Mathf.Clamp(wordLength, 0, wordLength);
-        value = Mathf.Clamp(value, 0, s.Length);
-        wordInputMenu.text = s.Substring(0, value);
     }
 }

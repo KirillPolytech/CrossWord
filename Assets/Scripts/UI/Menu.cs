@@ -18,7 +18,7 @@ public class Menu : MonoBehaviour
             buttons[i].onClick.AddListener(() =>
             {
                 SendCrossword(ind);
-                SceneLoader.LoadScene(0);
+                SceneLoader.LoadScene(SceneLoader.MainScene);
             });
         }
     }

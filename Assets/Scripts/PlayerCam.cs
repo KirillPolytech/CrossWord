@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class PlayerCam : MonoBehaviour
 {
@@ -8,19 +9,29 @@ public class PlayerCam : MonoBehaviour
     [Range(20, 40)][SerializeField] private int fovMax = 30;
     [Header("MovementSettings")]
     [Range(0f, 1f)][SerializeField] private float movementSpeed = 1f;
+    [Range(25, 50)][SerializeField] private int limit = 50;
 
     private Camera _camera;
     private Ray _ray;
     private RaycastHit _hit;
     private InputHandler _inputHandler;
     private CharacterLogic _temp;
-    private void Awake()
+
+    [Inject]
+    public void Construct(InputHandler inputHandler)
     {
+        _inputHandler = inputHandler;
         _camera = GetComponent<Camera>();
+    }
 
-        _inputHandler = FindAnyObjectByType<InputHandler>();
+    private void OnEnable()
+    {
+        _inputHandler.FixedUpdateCall += UpdateInput;
+    }
 
-        _inputHandler.UpdateCall += UpdateInput;
+    private void OnDisable()
+    {
+        _inputHandler.FixedUpdateCall -= UpdateInput;
     }
 
     private void UpdateInput()
@@ -38,6 +49,11 @@ public class PlayerCam : MonoBehaviour
     private void HandleMovement()
     {
         transform.position += (Vector3.right * _inputHandler.HorizontalInputValue + Vector3.up * _inputHandler.VerticalInputValue) * movementSpeed;
+
+        float x = Mathf.Clamp(transform.position.x, -limit ,limit);
+        float y = Mathf.Clamp(transform.position.y, -limit ,limit);
+        float z = Mathf.Clamp(transform.position.z, -limit ,limit);
+        transform.position = new Vector3(x, y, z);
     }
 
     private void CastRay()
@@ -60,7 +76,7 @@ public class PlayerCam : MonoBehaviour
             _temp = data;
             data.ChangeWordColor(ColorType.highlighted);
         }
-        else if (_temp != data)
+        else if (_temp == true && _temp != data)
         {
             _temp.ChangeWordColor(ColorType.normal);
             _temp = data;
