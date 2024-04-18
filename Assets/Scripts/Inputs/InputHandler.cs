@@ -5,6 +5,7 @@ public class InputHandler : MonoBehaviour
 {
     public event Action UpdateCall;
     public event Action FixedUpdateCall;
+    public event Action AlwaysFixedUpdateCall;
     public event Action AlwaysUpdateCall;
 
     public bool IsEnabled { get; set; }
@@ -37,7 +38,12 @@ public class InputHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        FixedUpdateCall?.Invoke();
+        if (IsEnabled == true)
+        {
+            FixedUpdateCall?.Invoke();
+        }
+        
+        AlwaysFixedUpdateCall?.Invoke();
     }
 
     private void Update()
@@ -48,9 +54,11 @@ public class InputHandler : MonoBehaviour
         MousePosition = Input.mousePosition;
         LeftMouseButton = Input.GetMouseButtonDown(0);
         RightMouseButton = Input.GetMouseButtonDown(1);
-        
+
         if (IsEnabled == true)
+        {
             UpdateCall?.Invoke();
+        }
         
         AlwaysUpdateCall?.Invoke();
     }

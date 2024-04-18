@@ -179,7 +179,7 @@ public class CrossWord : MonoBehaviour
             data.gameObject = block;
             data.transform = block.transform;
 
-            data.CurrentChar.text = data.DesiredChar.ToString();//"";
+            data.CurrentChar.text = "";//data.DesiredChar.ToString();//"";
 
             letter[f] = data;
         }

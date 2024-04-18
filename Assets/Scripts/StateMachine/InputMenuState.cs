@@ -1,12 +1,11 @@
-public class PauseState : GameState
+public class InputMenuState : GameState
 {
     private readonly InputHandler _inputHandler;
     private bool _tempState;
-    public PauseState (InputHandler inputHandler)
+    public InputMenuState (InputHandler inputHandler)
     {
         _inputHandler = inputHandler;
     }
-    
     public void EnterState()
     {
         _tempState = _inputHandler.IsEnabled;

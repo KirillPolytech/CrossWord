@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 public class CrosswordUI : MonoBehaviour
@@ -9,6 +10,7 @@ public class CrosswordUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI tutorial;
     [SerializeField] private TextMeshProUGUI wordDescriptions;
     [SerializeField] private TMP_InputField wordInputMenu;
+    [SerializeField] private Button closeButton;
 
     private int _wordLength = 0;
     private CharacterLogic _characterLogic;
@@ -20,7 +22,7 @@ public class CrosswordUI : MonoBehaviour
     private GamePreference _gamePreference;
 
     [Inject]
-    public void Construct( InputHandler inputHandler, CrossWord crossWord, InGameMenu inGameMenu, GamePreference gamePreference)
+    public void Construct(InputHandler inputHandler, CrossWord crossWord, InGameMenu inGameMenu, GamePreference gamePreference)
     {
         _inputHandler = inputHandler;
         _crossWord = crossWord;
@@ -43,6 +45,7 @@ public class CrosswordUI : MonoBehaviour
     private void Start()
     {
         wordInputMenu.gameObject.SetActive(false);
+        closeButton.gameObject.SetActive(false);
 
         ui = new GameObject[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
@@ -82,9 +85,16 @@ public class CrosswordUI : MonoBehaviour
 
         _characterLogic = logic;
 
+        wordInputMenu.text = "";
+        for (int i = 0; i < logic.WordData.Characters.Length; i++)
+        {
+            wordInputMenu.text += logic.WordData.Characters[i].CurrentChar.text;
+        }
+
         wordInputMenu.onValueChanged.RemoveAllListeners();
 
         wordInputMenu.gameObject.SetActive(true);
+        closeButton.gameObject.SetActive(true);
 
         _wordLength = logic.WordData.Characters.Length;
 
@@ -97,7 +107,7 @@ public class CrosswordUI : MonoBehaviour
             logic.CheckWordCompletion();
         });
         
-        _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.PauseState);
+        _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.InputMenuState);
 
         return true;
     }
@@ -110,6 +120,7 @@ public class CrosswordUI : MonoBehaviour
         wordInputMenu.onValueChanged.RemoveAllListeners();
 
         wordInputMenu.gameObject.SetActive(false);
+        closeButton.gameObject.SetActive(false);
 
         wordInputMenu.text = string.Empty;
 

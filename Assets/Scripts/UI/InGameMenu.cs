@@ -15,6 +15,7 @@ public class InGameMenu : MonoBehaviour
     private InputHandler _inputHandler;
     private GamePreference _gamePreference;
     private CrosswordUI _crosswordUI;
+    private GameState _tempState;
     private void Awake()
     {
         _inputHandler = FindFirstObjectByType<InputHandler>();
@@ -51,11 +52,16 @@ public class InGameMenu : MonoBehaviour
     private void ChangeInGameMenuState()
     {
         inGameMenu.enabled = !inGameMenu.enabled;
-        
+
         if (inGameMenu.enabled is true)
+        {
+            _tempState = _gamePreference.GameStateMachine.CurrentState;
             _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.PauseState);
+        }
         else
-            _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.ActiveState);
+        {
+            _gamePreference.GameStateMachine.ChangeState(_tempState);
+        }
     }
     
     public void ChangeHintsState()
