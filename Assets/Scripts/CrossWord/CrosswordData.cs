@@ -13,14 +13,14 @@ public class CrosswordData : MonoBehaviour
     public Slider slider;
     public GameObject wordParentPrefab;
     public GameObject blockPrefab;
-    public TextAsset words;
-    public TextAsset descriptions;
+    public string words;
+    public string descriptions;
 
     [Inject]
-    public void Construct(GamePreference gamePreference)
+    public void Construct(CrosswordFilesStorage crosswordFilesStorage)
     {
-        words = gamePreference.ChoosenCrossword;
-        descriptions = gamePreference.ChoosenDescription;
+        words = crosswordFilesStorage.chosenCrossword;
+        descriptions = crosswordFilesStorage.chosenDescription;
         
         slider.onValueChanged.AddListener( ChangeLength );
     }

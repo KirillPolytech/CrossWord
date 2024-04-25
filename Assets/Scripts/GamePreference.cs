@@ -1,31 +1,20 @@
 using UnityEngine;
+using Zenject;
 
-public class GamePreference : MonoBehaviour
+public class GamePreference
 {
     public StateMachine GameStateMachine;
-    public TextAsset ChoosenCrossword;
-    public TextAsset ChoosenDescription;
     
     private InputHandler _inputHandler;
     private GamePreference _instance;
-    private void Awake()
+
+    [Inject]
+    public void Construct(InputHandler inputHandler)
     {
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(transform.parent.gameObject);
-        }
-        else
-        {
-            Destroy(transform.parent.gameObject);
-            return;
-        }
-
-        Application.targetFrameRate = 60;
-        
-        _inputHandler = FindAnyObjectByType<InputHandler>();
-
+        _inputHandler = inputHandler;
         GameStateMachine = new StateMachine(_inputHandler);
         GameStateMachine.ChangeState(GameStateMachine.ActiveState);
+        
+        QualitySettings.vSyncCount = 2;
     }
 }

@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class InGameMenu : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class InGameMenu : MonoBehaviour
     [SerializeField] private Button continueButton;
     [SerializeField] private Button hintButton;
     [SerializeField] private TextMeshProUGUI hintButtonText;
-    [SerializeField] private Button ExitButton;
+    [SerializeField] private Button exitButton;
 
     public bool IsHintsEnabled { get; private set; }
 
@@ -16,17 +17,23 @@ public class InGameMenu : MonoBehaviour
     private GamePreference _gamePreference;
     private CrosswordUI _crosswordUI;
     private GameState _tempState;
+
+    [Inject]
+    public void Construct(GamePreference gamePreference, InputHandler inputHandler)
+    {
+        _gamePreference = gamePreference;
+        _inputHandler = inputHandler;
+    }
+    
     private void Awake()
     {
-        _inputHandler = FindFirstObjectByType<InputHandler>();
-        _gamePreference = FindFirstObjectByType<GamePreference>();
         _crosswordUI = FindAnyObjectByType<CrosswordUI>();
 
         inGameMenu.enabled = false;
         
         hintButton.onClick.AddListener(_crosswordUI.UpdateDescription);
         continueButton.onClick.AddListener(ChangeInGameMenuState);
-        ExitButton.onClick.AddListener(() => SceneLoader.LoadScene(SceneLoader.MenuScene));
+        exitButton.onClick.AddListener(() => SceneLoader.LoadScene(SceneLoader.MenuScene));
         
         hintButtonText.text = "Hints: off";
     }

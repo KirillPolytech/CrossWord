@@ -6,7 +6,6 @@ leaking
 to scramble
 to alter
 to decrypt
-to turn smth back into
 to intercept
 to couple smth with
 incomprehensible
@@ -14,18 +13,14 @@ cryptographic
 intended
 rightful
 highly unlikely
-set of mathematical values
 by brute force
 at rest
 in transit
-string of characters
 sensitive data
 data breaches
-regulatory and compliance standards
 HTTPS
 TLS
 SSL
-data protection principles
 to consider
 skill set
 to encounter
@@ -45,9 +40,7 @@ secure policies, procedures and rules
 to act proactively
 to expand storage capacity
 data management tools
-permanent data loss or damage
 to balance
-to prevent smb from doing smth
 accessible
 usable
 to abide
@@ -58,7 +51,6 @@ outdated
 VPN
 to steal identity
 to commit a fraud
-to violate privacy laws
 threat actors
 to embrace
 to enter
@@ -67,13 +59,10 @@ to mimic
 replicate smth
 to hoax, to deceive
 trick someone into
-to gain one's confidence
 malicious link
-security awareness and phishing training
 to empower someone
 to be disguised as legitimate software
 telltale sign
-to drop malware onto the computer
 to anticipate
 at its core
 primary concern
@@ -81,7 +70,5 @@ breach
 to damage functionality
 to corrupt files
 to aggregate
-to secure the device with unique passwords
 to prioritize the risks
 proactive approach
-it goes without saying

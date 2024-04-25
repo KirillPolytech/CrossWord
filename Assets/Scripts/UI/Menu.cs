@@ -1,17 +1,21 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 public class Menu : MonoBehaviour
 {
     [SerializeField] private Button[] buttons;
 
-    private GamePreference _gamePreference;
     private CrosswordFilesStorage _crosswordFilesStorage;
-    private void Awake()
+
+    [Inject]
+    public void Construct(CrosswordFilesStorage crosswordFilesStorage)
     {
-        _gamePreference = FindAnyObjectByType<GamePreference>();
-        _crosswordFilesStorage = FindAnyObjectByType<CrosswordFilesStorage>();
-        
+        _crosswordFilesStorage = crosswordFilesStorage;
+    }
+    
+    private void Start()
+    {
         for (int i = 0; i < buttons.Length; i++)
         {
             int ind = i;
@@ -22,10 +26,10 @@ public class Menu : MonoBehaviour
             });
         }
     }
-
+    
     private void SendCrossword(int i)
     {
-        _gamePreference.ChoosenCrossword = _crosswordFilesStorage.CrosswordFiles[i].Words;
-        _gamePreference.ChoosenDescription = _crosswordFilesStorage.CrosswordFiles[i].Description;
+        _crosswordFilesStorage.chosenCrossword = _crosswordFilesStorage.CrosswordFiles[i].Words.ToString();
+        _crosswordFilesStorage.chosenDescription = _crosswordFilesStorage.CrosswordFiles[i].Description.ToString();
     }
 }

@@ -15,27 +15,14 @@ public class InputHandler : MonoBehaviour
     public KeyCode GenerateCrosswordKey { get; set; } = KeyCode.Tab;
     public KeyCode HideInGameUIKey { get; private set; } = KeyCode.F1;
     public KeyCode InteractInGameMenu { get; private set; } = KeyCode.Escape;
+    public bool Enter { get; private set; }
+    public bool Space { get; private set; }
     public float MouseScrollValue { get; private set; }
     public float HorizontalInputValue { get; private set; }
     public float VerticalInputValue { get; private set; }
     public Vector2 MousePosition { get; private set; }
     public bool LeftMouseButton { get; private set; }
     public bool RightMouseButton { get; private set; }
-
-    private InputHandler _instance;
-    private void Awake()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(transform.parent.gameObject);
-        }
-        else
-        {
-            Destroy(transform.parent.gameObject);
-        }
-    }
-
     private void FixedUpdate()
     {
         if (IsEnabled == true)
@@ -46,7 +33,7 @@ public class InputHandler : MonoBehaviour
         AlwaysFixedUpdateCall?.Invoke();
     }
 
-    private void Update()
+    public void Update()
     {
         MouseScrollValue = Input.mouseScrollDelta.y;
         HorizontalInputValue = Input.GetAxisRaw("Horizontal");
@@ -54,6 +41,8 @@ public class InputHandler : MonoBehaviour
         MousePosition = Input.mousePosition;
         LeftMouseButton = Input.GetMouseButtonDown(0);
         RightMouseButton = Input.GetMouseButtonDown(1);
+        Space = Input.GetKeyDown(KeyCode.Space);
+        Enter = Input.GetKeyDown(KeyCode.KeypadEnter);
 
         if (IsEnabled == true)
         {

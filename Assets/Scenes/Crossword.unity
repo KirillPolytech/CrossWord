@@ -155,7 +155,7 @@ MonoBehaviour:
   continueButton: {fileID: 1728885910}
   hintButton: {fileID: 429107898}
   hintButtonText: {fileID: 516858717}
-  ExitButton: {fileID: 1256670305}
+  exitButton: {fileID: 1256670305}
 --- !u!114 &171015270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2429,8 +2429,8 @@ MonoBehaviour:
     type: 3}
   blockPrefab: {fileID: 4779032717168666309, guid: bc73729afd8aaa84fb149ac6978d1757,
     type: 3}
-  words: {fileID: 4900000, guid: d570b3373401be74589cb80c15b5180e, type: 3}
-  descriptions: {fileID: 4900000, guid: d116d65c2e39a434ababd4346b1c3a47, type: 3}
+  words: 
+  descriptions: 
 --- !u!1 &1544317714
 GameObject:
   m_ObjectHideFlags: 0
