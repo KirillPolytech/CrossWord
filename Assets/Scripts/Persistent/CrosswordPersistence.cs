@@ -39,16 +39,17 @@ public class CrosswordPersistence
         if (_crosswords == null)
         {
             _crosswords = new CustomCrossword[2];
+            Debug.Log($"data null");
         }
         
-        Debug.Log($"{str.Length * sizeof(char)}");
+        //Debug.Log($"{str.Length * sizeof(char)}");
     }
 
     public void SaveCrossword(CustomCrossword customCrossword)
     {
-        _crosswords[_ind++] = customCrossword;
+        _crosswords[Mathf.Clamp(_ind++, 0, _crosswords.Length - 1)] = customCrossword;
         DeleteData();
-        SaveData();
+        //SaveData();
     }
 
     public List<CustomCrossword> LoadCrosswords()

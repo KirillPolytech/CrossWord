@@ -1,11 +1,11 @@
+using CrosswordWindows;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-public class InGameMenu : MonoBehaviour
+public class InGameMenu : Window
 {
-    [SerializeField] private Canvas inGameMenu;
     [SerializeField] private Button continueButton;
     [SerializeField] private Button hintButton;
     [SerializeField] private TextMeshProUGUI hintButtonText;
@@ -13,28 +13,37 @@ public class InGameMenu : MonoBehaviour
 
     public bool IsHintsEnabled { get; private set; }
 
+    private GameState _tempState;
     private InputHandler _inputHandler;
     private GamePreference _gamePreference;
     private CrosswordUI _crosswordUI;
-    private GameState _tempState;
+    private WindowsController _windowsController;
 
     [Inject]
-    public void Construct(GamePreference gamePreference, InputHandler inputHandler)
+    public void Construct(CrossWord crossWord, 
+        CrosswordUI crosswordUI, 
+        GamePreference gamePreference, 
+        InputHandler inputHandler, 
+        WindowsController windowsController)
     {
         _gamePreference = gamePreference;
         _inputHandler = inputHandler;
+        _crosswordUI = crosswordUI;
+        _windowsController = windowsController;
+        
+        hintButton.onClick.AddListener(() => _crosswordUI.UpdateDescription(crossWord.SpawnedWords));
+        continueButton.onClick.AddListener(() => _windowsController.OpenWindow(_windowsController.GameUI));
+        exitButton.onClick.AddListener(() => SceneLoader.LoadScene(SceneLoader.MenuScene));
     }
     
-    private void Awake()
+    public override void Open()
     {
-        _crosswordUI = FindAnyObjectByType<CrosswordUI>();
-
-        inGameMenu.enabled = false;
-        
-        hintButton.onClick.AddListener(_crosswordUI.UpdateDescription);
-        continueButton.onClick.AddListener(ChangeInGameMenuState);
-        exitButton.onClick.AddListener(() => SceneLoader.LoadScene(SceneLoader.MenuScene));
-        
+        base.Open();
+        _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.PauseState);
+    }
+    
+    private void Start()
+    {
         hintButtonText.text = "Hints: off";
     }
 
@@ -50,25 +59,10 @@ public class InGameMenu : MonoBehaviour
 
     private void UpdateInGameMenuState()
     {
-        if (Input.GetKeyDown(_inputHandler.InteractInGameMenu) == false) //|| _gamePreference.GameStateMachine.CurrentState == _gamePreference.GameStateMachine.PauseState)
+        if (Input.GetKeyDown(_inputHandler.InteractInGameMenu) == false)
             return;
 
-        ChangeInGameMenuState();
-    }
-
-    private void ChangeInGameMenuState()
-    {
-        inGameMenu.enabled = !inGameMenu.enabled;
-
-        if (inGameMenu.enabled is true)
-        {
-            _tempState = _gamePreference.GameStateMachine.CurrentState;
-            _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.PauseState);
-        }
-        else
-        {
-            _gamePreference.GameStateMachine.ChangeState(_tempState);
-        }
+        _windowsController.OpenWindow(_windowsController.InGameWindow);
     }
     
     public void ChangeHintsState()

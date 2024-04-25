@@ -16,22 +16,24 @@ public class PlayerCam : MonoBehaviour
     private RaycastHit _hit;
     private InputHandler _inputHandler;
     private CharacterLogic _temp;
+    private WindowsController _windowsController;
 
     [Inject]
-    public void Construct(InputHandler inputHandler)
+    public void Construct(InputHandler inputHandler, WindowsController windowsController)
     {
         _inputHandler = inputHandler;
+        _windowsController = windowsController;
         _camera = GetComponent<Camera>();
     }
 
     private void OnEnable()
     {
-        _inputHandler.FixedUpdateCall += UpdateInput;
+        _inputHandler.UpdateCall += UpdateInput;
     }
 
     private void OnDisable()
     {
-        _inputHandler.FixedUpdateCall -= UpdateInput;
+        _inputHandler.UpdateCall -= UpdateInput;
     }
 
     private void UpdateInput()
@@ -86,7 +88,8 @@ public class PlayerCam : MonoBehaviour
         if (_inputHandler.LeftMouseButton == false)
             return;
 
-        data.OpenMenu();
+        _windowsController.InputFieldWindow.Initialize(data);
+        _windowsController.OpenWindow(_windowsController.InputFieldWindow);
     }
 
     private void OnDrawGizmos()

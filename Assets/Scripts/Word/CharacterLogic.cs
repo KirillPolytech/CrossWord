@@ -5,14 +5,12 @@ public class CharacterLogic : MonoBehaviour
 {   
     public readonly WordData WordData = new WordData();
     public bool IsCompleted { get; private set; }
-    public bool IsSelected { get; private set; }
 
-    private CrosswordUI _ui;
+    private WindowsController _windowsController;
     private BoxCollider _boxCollider;
     
     public void Initialize(Vector3 horDir, Vector3 vertDir, Vector3 dir)
     {
-        _ui = FindAnyObjectByType<CrosswordUI>();
         _boxCollider = GetComponent<BoxCollider>();
         
         float ind = (float)WordData.Characters.Length / 2;
@@ -35,19 +33,6 @@ public class CharacterLogic : MonoBehaviour
     private void Start()
     {
         IsCompleted = false;
-    }
-
-    public void OpenMenu()
-    {
-        if (IsCompleted == true)
-            return;
-
-        bool isOpened = _ui.OpenInputPanel(this);
-
-        IsSelected = isOpened;
-
-        if (isOpened == true)
-            ChangeWordColor(ColorType.selected);
     }
 
     public void ChangeWordColor(ColorType color)
@@ -100,9 +85,7 @@ public class CharacterLogic : MonoBehaviour
         }
 
         IsCompleted = true;
-
-        _ui.CloseInputPanel();
-
+        
         ChangeWordColor(ColorType.finished);
 
         Debug.Log("Completed");
