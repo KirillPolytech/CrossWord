@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
+[Serializable]
 public class CustomCrossword
 {
-    private List<WordData> _words = new List<WordData>();
+    public List<WordData> _words = new List<WordData>();
 
     public void AddWord(string word, string description)
     {

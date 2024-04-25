@@ -2,18 +2,36 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InputWordPairsScrollView : MonoBehaviour
 {
     [SerializeField] private RectTransform context;
     [SerializeField] private RectTransform wordPairInputPrefab;
+    [SerializeField] private Button finishButton;
+    [SerializeField] private TextMeshProUGUI errorText;
+
+    [Header("Canvases")] 
+    [SerializeField] private Canvas CreateCrosswordCanvas; 
+    [SerializeField] private Canvas CrosswordsCanvas;
 
     private CustomCrossword _customCrossword;
-    private List<CustomWord> _wordPairs = new List<CustomWord>();
-
+    private readonly List<CustomWord> _wordPairs = new List<CustomWord>();
+    private bool _hasError;
     public void Initialize(CustomCrossword customCrossword)
     {
         _customCrossword = customCrossword;
+        
+        finishButton.onClick.AddListener(() =>
+        {
+            FinishCustomCrossword();
+
+            if (_hasError == false)
+            {
+                CreateCrosswordCanvas.enabled = false;
+                CrosswordsCanvas.enabled = true;
+            }
+        });
     }
 
     public void AddWordInputField()
@@ -44,8 +62,34 @@ public class InputWordPairsScrollView : MonoBehaviour
         context.offsetMin = new Vector2(context.offsetMin.x, context.offsetMin.y + wordPairInputPrefab.sizeDelta.y);
     }
 
-    public void FinishCustomCrossword()
+    private void FinishCustomCrossword()
     {
+        errorText.text = "";
+        _hasError = false;
+        
+        if (_wordPairs.Count < 14)
+        { 
+            errorText.text += "Error. The number of words does not exceed 14.\n";
+            _hasError = true;
+        }
+        
+        if (_wordPairs.Where(x => x.Description.text == string.Empty).ToList().Count != 0)
+        {
+            errorText.text += "Error. The word descriptions are not fully filled in.\n";
+            _hasError = true;
+        }
+        
+        if (_wordPairs.Where(x => x.Word.text == string.Empty).ToList().Count != 0)
+        {
+            errorText.text += "Error. The words are not fully filled in.\n";
+            _hasError = true;
+        }
+
+        if (_hasError == true)
+        {
+            return;
+        }
+        
         foreach (var wordPair in _wordPairs)
         {
             _customCrossword.AddWord(wordPair.Word.text, wordPair.Description.text);

@@ -10,5 +10,6 @@ public class MenuInstaller : MonoInstaller
     {
         Container.Bind<InputWordPairsScrollView>().FromInstance(inputWordPairsScroll).AsSingle();
         Container.Bind<CustomCrosswordScrollView>().FromInstance(crosswordScroll).AsSingle();
+        Container.Bind<CustomCrosswordsStorage>().FromNew().AsSingle();
     }
 }

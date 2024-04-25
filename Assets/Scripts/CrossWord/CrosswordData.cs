@@ -17,10 +17,10 @@ public class CrosswordData : MonoBehaviour
     public string descriptions;
 
     [Inject]
-    public void Construct(CrosswordFilesStorage crosswordFilesStorage)
+    public void Construct(CrosswordPersistence crosswordPersistence)
     {
-        words = crosswordFilesStorage.chosenCrossword;
-        descriptions = crosswordFilesStorage.chosenDescription;
+        words = crosswordPersistence.chosenCrossword;
+        descriptions = crosswordPersistence.chosenDescription;
         
         slider.onValueChanged.AddListener( ChangeLength );
     }

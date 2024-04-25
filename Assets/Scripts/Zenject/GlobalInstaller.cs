@@ -3,9 +3,12 @@ using Zenject;
 
 public class GlobalInstaller : MonoInstaller
 {
+    [SerializeField] private DebugStuff debugStuff;
     [SerializeField] private CrosswordFilesStorage crosswordFilesStorage;
     public override void InstallBindings()
     {
+        debugStuff.Initialize();
+        
         BindInputHandler();
         BindGamePreference();
         BindCrosswordFilesStorage();

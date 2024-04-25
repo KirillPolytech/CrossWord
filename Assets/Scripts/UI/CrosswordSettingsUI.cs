@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-public class CrosswordSettings : MonoBehaviour
+public class CrosswordSettingsUI : MonoBehaviour
 {
     [SerializeField] private TMP_InputField generateCrosswordInputField;
 

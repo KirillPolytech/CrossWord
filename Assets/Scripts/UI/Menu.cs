@@ -4,22 +4,29 @@ using Zenject;
 
 public class Menu : MonoBehaviour
 {
-    [SerializeField] private Button[] buttons;
+    [SerializeField] private Button[] choiceButtons;
+    [SerializeField] private Button addCrosswordButton;
 
+    private CrosswordPersistence _crosswordPersistence;
+    private CustomCrosswordsStorage _customCrosswordsStorage;
     private CrosswordFilesStorage _crosswordFilesStorage;
 
     [Inject]
-    public void Construct(CrosswordFilesStorage crosswordFilesStorage)
+    public void Construct(CrosswordFilesStorage crosswordFilesStorage, CrosswordPersistence crosswordPersistence, CustomCrosswordsStorage customCrosswordsStorage)
     {
+        _crosswordPersistence = crosswordPersistence;
+        _customCrosswordsStorage = customCrosswordsStorage;
         _crosswordFilesStorage = crosswordFilesStorage;
     }
     
     private void Start()
     {
-        for (int i = 0; i < buttons.Length; i++)
+        addCrosswordButton.onClick.AddListener(_customCrosswordsStorage.CreateCrossword);
+        
+        for (int i = 0; i < choiceButtons.Length; i++)
         {
             int ind = i;
-            buttons[i].onClick.AddListener(() =>
+            choiceButtons[i].onClick.AddListener(() =>
             {
                 SendCrossword(ind);
                 SceneLoader.LoadScene(SceneLoader.MainScene);
@@ -29,7 +36,7 @@ public class Menu : MonoBehaviour
     
     private void SendCrossword(int i)
     {
-        _crosswordFilesStorage.chosenCrossword = _crosswordFilesStorage.CrosswordFiles[i].Words.ToString();
-        _crosswordFilesStorage.chosenDescription = _crosswordFilesStorage.CrosswordFiles[i].Description.ToString();
+        _crosswordPersistence.chosenCrossword = _crosswordFilesStorage.CrosswordFiles[i].Words.ToString();
+        _crosswordPersistence.chosenDescription = _crosswordFilesStorage.CrosswordFiles[i].Description.ToString();
     }
 }

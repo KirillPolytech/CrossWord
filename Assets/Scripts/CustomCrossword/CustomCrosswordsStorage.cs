@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Zenject;
 
-public class CustomCrosswordsStorage : MonoBehaviour
+public class CustomCrosswordsStorage
 {
-    private static List<CustomCrossword> _crosswords;
+    private List<CustomCrossword> _crosswords;
     private InputWordPairsScrollView _inputWordPairsScroll;
     private CustomCrosswordScrollView _crosswordScroll;
-    private CrosswordFilesStorage _crosswordFilesStorage;
     private CustomCrosswordsStorage _instance;
     private CrosswordPersistence _crosswordPersistence;
 
@@ -22,7 +20,8 @@ public class CustomCrosswordsStorage : MonoBehaviour
         _inputWordPairsScroll = inputWordPairsScroll;
         _crosswordScroll = crosswordScroll;
         _crosswordPersistence = crosswordPersistence;
-        _crosswordFilesStorage = crosswordFilesStorage;
+
+        Awake();
     }
 
     private void Awake()
@@ -37,33 +36,35 @@ public class CustomCrosswordsStorage : MonoBehaviour
         RestoreCrosswords();
     }
 
-    private void RestoreCrosswords()
-    {
-        foreach (var action in _crosswords.Select(c => (Action)(() =>
-                 {
-                     _crosswordFilesStorage.chosenCrossword = c.GetWords();
-                     _crosswordFilesStorage.chosenDescription = c.GetWordDescriptions();
-                     SceneLoader.LoadScene(SceneLoader.MainScene);
-                 })))
-        {
-            _crosswordScroll.CreateCustomCrosswordButton(action);
-        }
-    }
-
     public void CreateCrossword()
     {
         CustomCrossword customCrossword = new CustomCrossword();
         _crosswords.Add(customCrossword);
+        
+        _crosswordPersistence.SaveCrossword(customCrossword);
 
         _inputWordPairsScroll.Initialize(customCrossword);
 
         Action action = () =>
         {
-            _crosswordFilesStorage.chosenCrossword = customCrossword.GetWords();
-            _crosswordFilesStorage.chosenDescription = customCrossword.GetWordDescriptions();
+            _crosswordPersistence.chosenCrossword = customCrossword.GetWords();
+            _crosswordPersistence.chosenDescription = customCrossword.GetWordDescriptions();
             SceneLoader.LoadScene(SceneLoader.MainScene);
         };
 
         _crosswordScroll.CreateCustomCrosswordButton(action);
+    }
+    
+    private void RestoreCrosswords()
+    {
+        foreach (var action in _crosswords.Select(c => (Action)(() =>
+                 {
+                     _crosswordPersistence.chosenCrossword = c.GetWords();
+                     _crosswordPersistence.chosenDescription = c.GetWordDescriptions();
+                     SceneLoader.LoadScene(SceneLoader.MainScene);
+                 })))
+        {
+            _crosswordScroll.CreateCustomCrosswordButton(action);
+        }
     }
 }

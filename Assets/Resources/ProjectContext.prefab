@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1331317257433237928}
   - component: {fileID: 6272958843169769864}
   - component: {fileID: -807290367952376311}
+  - component: {fileID: 2277241596539877265}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -75,6 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df5eeee486f58143a282139bf758aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugStuff: {fileID: 2277241596539877265}
   crosswordFilesStorage: {fileID: -807290367952376311}
 --- !u!114 &-807290367952376311
 MonoBehaviour:
@@ -95,223 +97,15 @@ MonoBehaviour:
     Description: {fileID: 0}
   - Words: {fileID: 4900000, guid: 064e52f08d17d1847bdf571525304c0c, type: 3}
     Description: {fileID: 4900000, guid: a6265634841c44342bb5fc52a0f53cac, type: 3}
-  chosenCrossword: 'encryption
-
-    authorised party
-
-    plaintext
-
-    ciphertext
-
-    leaking
-
-    to
-    scramble
-
-    to alter
-
-    to decrypt
-
-    to intercept
-
-    to couple smth
-    with
-
-    incomprehensible
-
-    cryptographic
-
-    intended
-
-    rightful
-
-    highly
-    unlikely
-
-    by brute force
-
-    at rest
-
-    in transit
-
-    sensitive data
-
-    data
-    breaches
-
-    HTTPS
-
-    TLS
-
-    SSL
-
-    to consider
-
-    skill set
-
-    to
-    encounter
-
-    to cover
-
-    vulnerability
-
-    ransomware
-
-    to encompass
-
-    confidentiality
-
-    availability
-
-    integrity
-
-    to
-    focus on
-
-    to ensure
-
-    to surround
-
-    potential corruption
-
-    outcome
-
-    secure
-    policies, procedures and rules
-
-    to act proactively
-
-    to expand storage
-    capacity
-
-    data management tools
-
-    to balance
-
-    accessible
-
-    usable
-
-    to
-    abide
-
-    integral
-
-    consistent and regular backup
-
-    safe and secure
-
-    outdated
-
-    VPN
-
-    to
-    steal identity
-
-    to commit a fraud
-
-    threat actors
-
-    to embrace
-
-    to
-    enter
-
-    capture personal data
-
-    to mimic
-
-    replicate smth
-
-    to hoax,
-    to deceive
-
-    trick someone into
-
-    malicious link
-
-    to empower someone
-
-    to
-    be disguised as legitimate software
-
-    telltale sign
-
-    to anticipate
-
-    at
-    its core
-
-    primary concern
-
-    breach
-
-    to damage functionality
-
-    to
-    corrupt files
-
-    to aggregate
-
-    to prioritize the risks
-
-    proactive approach'
-  chosenDescription: "Process of converting information or data into a code to prevent
-    unauthorized access\r\nPerson or entity that is approved or permitted to access
-    certain information or resources\r\nData that is readable and unencrypted\r\nEncrypted
-    data\r\nUnintended disclosure or exposure of sensitive information or data\r\nTo
-    mix up or jumble data in a way that makes it unreadable or difficult to interpret\r\nChange
-    or modify data or information\r\nTo convert encrypted data back into its original,
-    readable form\r\nTo secretly capture or access data as it is being transmitted
-    between two parties (Begin with \"to\")\r\nTo link or connect one thing with
-    another (Begin with \"to\")\r\nEncrypted data\r\nRelated to the science of creating
-    and deciphering codes for secure communication\r\nPlanned or meant to be used
-    in a specific way or for a specific purpose\r\nHaving a legitimate or just claim
-    to something\r\nVery improbable or not expected to happen\r\nMethod of trying
-    all possible combinations to break a code or encryption\r\nData or information
-    is stored or available for future use\r\nStatus of a package, shipment, or item
-    that is currently being transported from one location to another\r\nConfidential
-    or private information that needs to be protected from unauthorized access\r\nIncidents
-    where sensitive data is exposed, stolen, or accessed without authorization\r\nProtocol
-    used for secure communication over a computer network\r\nProtocol that ensures
-    privacy and data integrity between communicating applications\r\nDeprecated protocol
-    for secure communication over a computer network\r\nTo take into account or think
-    about when making decisions or plans\r\nCollection of abilities that a person
-    possesses\r\nTo come across or face something, often unexpectedly\r\nTo address
-    or include all aspects of a topic or issue\r\nWeakness or flaw in a system that
-    can be exploited by attackers\r\nType of malicious software that encrypts files
-    and demands payment for their release\r\nTo include or contain a wide range of
-    elements or possibilities\r\nProtection of sensitive or private information from
-    unauthorized access\r\nEnsuring that data or resources are accessible when needed\r\nAccuracy
-    and consistency of data, ensuring that it has not been tampered with\r\nTo concentrate
-    attention or effort on a specific task or objective (Begin with \"to\")\r\nTo
-    make certain or secure something\r\nTo encircle or encompass something\r\nRisk
-    of data being altered or tampered with\r\nResult or consequence of a particular
-    action or event\r\nEstablished guidelines and regulations that promote data security
-    (\u041D\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u0438\u0442)\r\nTo take preventive
-    action or anticipate problems before they occur (Begin with \"to\")\r\nTo increase
-    the amount of data that can be stored (Begin with \"to\")\r\nSoftware or systems
-    used to organize, store, and retrieve data efficiently\r\nTo keep things steady
-    or in equilibrium.\r\nAble to be reached or used easily.\r\nCapable of being
-    used or operated.\r\nTo accept or act in accordance with a rule, decision, or
-    recommendation.\r\nNecessary for completeness or functioning.\r\nBacking up data
-    on a regular basis to maintain data consistency and integrity.\r\nProtected and
-    free from harm or danger.\r\nNo longer current or in use.\r\nSecure network connection
-    established over the internet.\r\nTo take someone else's personal information
-    without permission.\r\nTo engage in deceptive or deceitful behavior for personal
-    gain.\r\nIndividuals or groups who pose a threat to the security of computer
-    systems or data.\r\nTo accept or support something willingly.\r\nTo go or come
-    into a place.\r\nTo obtain and store information about individuals.\r\nTo imitate
-    or copy the actions or characteristics of someone or something.\r\nTo duplicate
-    or reproduce something exactly.\r\nTo trick or deceive someone.\r\nTo deceive
-    or manipulate someone into doing something.\r\nHyperlink that leads to a website
-    or page designed to harm a user's computer.\r\nTo give someone the authority
-    or power to do something.\r\nTo appear as genuine or authentic software.\r\nDistinctive
-    indication or characteristic that reveals something.\r\nTo expect or foresee
-    something happening.\r\nAt the fundamental or central part of something.\r\nThe
-    most important or significant issue.\r\nViolation or failure to follow a rule
-    or agreement.\r\nTo impair or harm the ability of something to function properly.\r\nTo
-    make files unusable or damaged.\r\nTo collect or gather information from different
-    sources.\r\nTo rank or order risks based on their importance or potential impact.\r\nTaking
-    action to prevent issues before they occur."
+--- !u!114 &2277241596539877265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4438677209618135584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ecfe2837ab43f141903f84e35f49ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
