@@ -11,8 +11,6 @@ public class GamePreference
     [Inject]
     public void Construct(InputHandler inputHandler)
     {
-        UnityEngine.Profiling.Profiler.maxUsedMemory = 256 * 1024 * 1024 * 2;
-        
         _inputHandler = inputHandler;
         GameStateMachine = new StateMachine(_inputHandler);
         GameStateMachine.ChangeState(GameStateMachine.ActiveState);

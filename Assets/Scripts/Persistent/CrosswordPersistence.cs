@@ -1,71 +1,73 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using Zenject;
 
-public class CrosswordPersistence
+public class CrosswordPersistence : ITickable
 {
     public string chosenCrossword;
     public string chosenDescription;
 
-    private readonly CustomCrossword[] _crosswords;
-    private int _ind = 0;
+    private readonly List<CustomCrossword> _crosswords = new List<CustomCrossword>();
+    private int _ind;
     private readonly string _key = "k";
-
-    public CrosswordPersistence()
+    private InputHandler _inputHandler;
+    
+    [Inject]
+    public CrosswordPersistence(InputHandler inputHandler)
     {
-        //FileStream file = File.Create(Application.persistentDataPath + "/MySaveData.txt");
-
-        /*
-        for (int i = 0; i < _crosswords.Length; i++)
-        {
-            _crosswords[i] = new CustomCrossword();
-            for (int j = 0; j < 15; j++)
-            {
-                _crosswords[i]._words.Add(new WordData
-                {
-                    WordIndex = 0,
-                    Word = Random.Range(0,255).ToString(),
-                    WordDescription = Random.Range(0,255).ToString(),
-                });
-            }
-        }
-        */
-       
-        string str = PlayerPrefs.GetString(_key);
-        _crosswords = JsonConvert.DeserializeObject<CustomCrossword[]>(str);
-
-        if (_crosswords == null)
-        {
-            _crosswords = new CustomCrossword[2];
-            Debug.Log($"data null");
-        }
+        _inputHandler = inputHandler; 
         
-        //Debug.Log($"{str.Length * sizeof(char)}");
+        string stringFromBrowser = PlayerPrefs.GetString(_key);
+
+        CustomCrossword dataFromBrowser = JsonUtility.FromJson<CustomCrossword>(stringFromBrowser);
+
+        if (dataFromBrowser != null)
+            _crosswords.Add(dataFromBrowser);
+
+        Debug.Log(dataFromBrowser == null ? $"data null" : $"Data is not null");
+    }
+    
+    [Inject]
+    public void Tick()
+    {
+        if (Input.GetKeyDown(_inputHandler.DeleteSaves))
+        {
+            DeleteData();
+        }
     }
 
     public void SaveCrossword(CustomCrossword customCrossword)
     {
-        _crosswords[Mathf.Clamp(_ind++, 0, _crosswords.Length - 1)] = customCrossword;
+        _crosswords.Add(customCrossword);
+        
         DeleteData();
-        //SaveData();
+        SaveData();
     }
 
     public List<CustomCrossword> LoadCrosswords()
     {
-        return _crosswords.Where(x => x != null).ToList();
+        return _crosswords?.Where(x => x != null).ToList();
     }
 
     private void SaveData()
     {
-        string jsonArray = JArray.FromObject(_crosswords).ToString();
+        string jsonArray = JsonUtility.ToJson(_crosswords[0]);
+        Debug.Log($"Data to array");
         PlayerPrefs.SetString(_key, jsonArray);
+        Debug.Log($"SetData jsonArray: {jsonArray}");
         PlayerPrefs.Save();
+        Debug.Log($"saves data");
     }
 
-    private void DeleteData()
+    public void DeleteData()
     {
         PlayerPrefs.DeleteAll();
+        Debug.Log("Data deleted");
     }
 }
+//FileStream file = File.Create(Application.persistentDataPath + "/MySaveData.txt");
+
+//string jsonArray = JArray.FromObject(_crosswords).ToString();
+
+//_crosswords = JsonConvert.DeserializeObject<CustomCrossword[]>(dataFromBrowser);

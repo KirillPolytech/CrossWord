@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6272958843169769864}
   - component: {fileID: -807290367952376311}
   - component: {fileID: 2277241596539877265}
+  - component: {fileID: -2517340652506117472}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -78,6 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugStuff: {fileID: 2277241596539877265}
   crosswordFilesStorage: {fileID: -807290367952376311}
+  inputHandler: {fileID: -2517340652506117472}
 --- !u!114 &-807290367952376311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,5 +109,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ecfe2837ab43f141903f84e35f49ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-2517340652506117472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4438677209618135584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ed393150d4c4846b5ccdbf3a8755c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -17,6 +17,7 @@ public class InputWindow : Window
     {
         _gamePreference = gamePreference;
     }
+    
     public void Initialize(CharacterLogic logic)
     {
         _characterLogic = logic;

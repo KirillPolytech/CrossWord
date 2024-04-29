@@ -5,7 +5,7 @@ public class DebugStuff : MonoBehaviour
 {
     private string _myLog = "";
     private string _output;
-    private bool _isEnabled = true;
+    private bool _isEnabled;
     public void Initialize()
     {
         Application.logMessageReceived += Log;
@@ -23,7 +23,7 @@ public class DebugStuff : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F5))
+        if (Input.GetKeyDown(KeyCode.RightShift))
         {
             _isEnabled = !_isEnabled;
         }
@@ -41,7 +41,7 @@ public class DebugStuff : MonoBehaviour
     private void Log(string logString, string stackTrace, LogType type)
     {
         _output = logString;
-        _myLog = _output + " " + _myLog;
+        _myLog += $"{_output}\n";
         if (_myLog.Length > 1000)
         {
             _myLog = _myLog[..700];

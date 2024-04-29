@@ -4,17 +4,15 @@ using UnityEngine;
 public class InputHandler : MonoBehaviour
 {
     public event Action UpdateCall;
+    public event Action AlwaysUpdateCall;
     public event Action FixedUpdateCall;
     public event Action AlwaysFixedUpdateCall;
-    public event Action AlwaysUpdateCall;
 
     public bool IsEnabled { get; set; }
-    
     public KeyCode CurrentKeyDown { get; private set; }
-
     public KeyCode GenerateCrosswordKey { get; set; } = KeyCode.Tab;
-    public KeyCode HideInGameUIKey { get; private set; } = KeyCode.F1;
-    public KeyCode InteractInGameMenu { get; private set; } = KeyCode.Escape;
+    public KeyCode DeleteSaves { get; private set; } = KeyCode.F8;
+    public KeyCode InteractInGameMenu { get; private set; } = KeyCode.LeftControl;
     public bool Enter { get; private set; }
     public bool Space { get; private set; }
     public float MouseScrollValue { get; private set; }
@@ -33,7 +31,7 @@ public class InputHandler : MonoBehaviour
         AlwaysFixedUpdateCall?.Invoke();
     }
 
-    public void Update()
+    private void Update()
     {
         MouseScrollValue = Input.mouseScrollDelta.y;
         HorizontalInputValue = Input.GetAxisRaw("Horizontal");
@@ -43,7 +41,7 @@ public class InputHandler : MonoBehaviour
         RightMouseButton = Input.GetMouseButtonDown(1);
         Space = Input.GetKeyDown(KeyCode.Space);
         Enter = Input.GetKeyDown(KeyCode.KeypadEnter);
-
+        
         if (IsEnabled == true)
         {
             UpdateCall?.Invoke();

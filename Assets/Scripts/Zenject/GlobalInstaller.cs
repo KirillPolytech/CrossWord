@@ -5,6 +5,7 @@ public class GlobalInstaller : MonoInstaller
 {
     [SerializeField] private DebugStuff debugStuff;
     [SerializeField] private CrosswordFilesStorage crosswordFilesStorage;
+    [SerializeField] private InputHandler inputHandler;
     public override void InstallBindings()
     {
         debugStuff.Initialize();
@@ -24,8 +25,10 @@ public class GlobalInstaller : MonoInstaller
     {
         Container.
             Bind<InputHandler>().
-            FromNewComponentOnNewGameObject().
-            AsSingle().NonLazy();
+            FromInstance(inputHandler).
+            //FromNewComponentOnNewGameObject().
+            AsSingle().
+            NonLazy();
     }
 
     private void BindGamePreference()
@@ -33,7 +36,8 @@ public class GlobalInstaller : MonoInstaller
         Container.
             Bind<GamePreference>().
             FromNew().
-            AsSingle();
+            AsSingle().
+            NonLazy();;
     }
 
     private void BindCrosswordFilesStorage()
@@ -41,14 +45,16 @@ public class GlobalInstaller : MonoInstaller
         Container.
             Bind<CrosswordFilesStorage>().
             FromInstance(crosswordFilesStorage).
-            AsSingle().NonLazy();
+            AsSingle().
+            NonLazy();
     }
     
     private void BindCustomCrosswordsStorage()
     {
         Container.
-            Bind<CrosswordPersistence>().
+            BindInterfacesAndSelfTo<CrosswordPersistence>().
             FromNew().
-            AsSingle();
+            AsSingle().
+            NonLazy();
     }
 }

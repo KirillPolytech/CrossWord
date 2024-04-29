@@ -20,7 +20,8 @@ public class InGameMenu : Window
     private WindowsController _windowsController;
 
     [Inject]
-    public void Construct(CrossWord crossWord, 
+    public void Construct(
+        CrossWord crossWord, 
         CrosswordUI crosswordUI, 
         GamePreference gamePreference, 
         InputHandler inputHandler, 
@@ -32,21 +33,10 @@ public class InGameMenu : Window
         _windowsController = windowsController;
         
         hintButton.onClick.AddListener(() => _crosswordUI.UpdateDescription(crossWord.SpawnedWords));
-        continueButton.onClick.AddListener(() => _windowsController.OpenWindow(_windowsController.GameUI));
+        continueButton.onClick.AddListener(() => _windowsController.OpenWindow("GameUI"));
         exitButton.onClick.AddListener(() => SceneLoader.LoadScene(SceneLoader.MenuScene));
     }
     
-    public override void Open()
-    {
-        base.Open();
-        _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.PauseState);
-    }
-    
-    private void Start()
-    {
-        hintButtonText.text = "Hints: off";
-    }
-
     private void OnEnable()
     {
         _inputHandler.AlwaysUpdateCall += UpdateInGameMenuState;
@@ -56,13 +46,24 @@ public class InGameMenu : Window
     {
         _inputHandler.AlwaysUpdateCall -= UpdateInGameMenuState;
     }
+    
+    private void Start()
+    {
+        hintButtonText.text = "Hints: off";
+    }
+    
+    public override void Open()
+    {
+        base.Open();
+        _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.PauseState);
+    }
 
     private void UpdateInGameMenuState()
     {
         if (Input.GetKeyDown(_inputHandler.InteractInGameMenu) == false)
             return;
 
-        _windowsController.OpenWindow(_windowsController.InGameWindow);
+        _windowsController.OpenWindow("InGameWindow");
     }
     
     public void ChangeHintsState()

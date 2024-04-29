@@ -17,6 +17,7 @@ public class PlayerCam : MonoBehaviour
     private InputHandler _inputHandler;
     private CharacterLogic _temp;
     private WindowsController _windowsController;
+    private InputWindow _inputWindow;
 
     [Inject]
     public void Construct(InputHandler inputHandler, WindowsController windowsController)
@@ -24,6 +25,8 @@ public class PlayerCam : MonoBehaviour
         _inputHandler = inputHandler;
         _windowsController = windowsController;
         _camera = GetComponent<Camera>();
+
+        _inputWindow = FindAnyObjectByType<InputWindow>();
     }
 
     private void OnEnable()
@@ -88,8 +91,8 @@ public class PlayerCam : MonoBehaviour
         if (_inputHandler.LeftMouseButton == false)
             return;
 
-        _windowsController.InputFieldWindow.Initialize(data);
-        _windowsController.OpenWindow(_windowsController.InputFieldWindow);
+        _inputWindow.Initialize(data);
+        _windowsController.OpenWindow("InputWindow");
     }
 
     private void OnDrawGizmos()

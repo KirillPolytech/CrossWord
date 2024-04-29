@@ -16,14 +16,24 @@ public class CrosswordUI : Window
     private CrossWord _crossWord;
     private InGameMenu _inGameMenu;
     private WindowsController _windowsController;
+    private GamePreference _gamePreference;
 
     [Inject]
-    public void Construct(WindowsController windowsController, InputHandler inputHandler, CrossWord crossWord, InGameMenu inGameMenu)
+    public void Construct(WindowsController windowsController, InputHandler inputHandler, 
+        CrossWord crossWord, InGameMenu inGameMenu, GamePreference gamePreference)
     {
         _inputHandler = inputHandler;
         _crossWord = crossWord;
         _inGameMenu = inGameMenu;
         _windowsController = windowsController;
+        _gamePreference = gamePreference;
+    }
+
+    public override void Open()
+    {
+        base.Open();
+        
+        _gamePreference.GameStateMachine.ChangeState(_gamePreference.GameStateMachine.ActiveState);
     }
 
     private void OnEnable()
@@ -38,20 +48,21 @@ public class CrosswordUI : Window
 
     private void Start()
     {
-        tutorial.text = $"Generate crossword key: {_inputHandler.GenerateCrosswordKey}";
+        tutorial.text = $"Generate crossword key: {_inputHandler.GenerateCrosswordKey}\n";
     }
 
     private void HandleInput()
     {
         if (Input.GetKeyDown(_inputHandler.GenerateCrosswordKey))
         {
+            Debug.Log("Generate Crossword\n");
             _crossWord.Generate();
             SetDescription(_crossWord.SpawnedWords, _inGameMenu.IsHintsEnabled);
         }
 
         if (_inputHandler.RightMouseButton)
         {
-            _windowsController.OpenWindow(_windowsController.GameUI);
+            _windowsController.OpenWindow("GameUI");
         }
     }
     

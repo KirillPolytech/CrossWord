@@ -5,7 +5,7 @@ using System.Linq;
 [Serializable]
 public class CustomCrossword
 {
-    public List<WordData> _words = new List<WordData>();
+    public List<WordData> words = new List<WordData>();
 
     public void AddWord(string word, string description)
     {
@@ -14,16 +14,10 @@ public class CustomCrossword
             Word = word,
             WordDescription = description
         };
-        _words.Add(data);
+        words.Add(data);
     }
 
-    public string GetWords()
-    {
-        return _words.Aggregate("", (current, word) => current + word.Word + "\n");
-    }
+    public string GetWords() => words.Aggregate("", (current, word) => current + word.Word + "\n");
 
-    public string GetWordDescriptions()
-    {
-        return _words.Aggregate("", (current, word) => current + word.WordDescription + "\n");
-    }
+    public string GetWordDescriptions() =>  words.Aggregate("", (current, word) => current + word.WordDescription + "\n");
 }

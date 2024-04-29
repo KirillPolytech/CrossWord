@@ -3,6 +3,10 @@ namespace CrosswordWindows
     using UnityEngine;
     public abstract class Window : MonoBehaviour
     {
+        [SerializeField] private string windowName;
+
+        public string WindowName => windowName;
+        
         protected Canvas _canvas;
 
         protected virtual void Awake()

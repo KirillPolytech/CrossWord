@@ -6,6 +6,7 @@ public class Menu : MonoBehaviour
 {
     [SerializeField] private Button[] choiceButtons;
     [SerializeField] private Button addCrosswordButton;
+    [SerializeField] private Button deleteCrosswordButton;
 
     private CrosswordPersistence _crosswordPersistence;
     private CustomCrosswordsStorage _customCrosswordsStorage;
@@ -21,7 +22,8 @@ public class Menu : MonoBehaviour
     
     private void Start()
     {
-        addCrosswordButton.onClick.AddListener(_customCrosswordsStorage.CreateCrossword);
+        addCrosswordButton.onClick.AddListener(_customCrosswordsStorage.Create);
+        deleteCrosswordButton.onClick.AddListener(_customCrosswordsStorage.Delete);
         
         for (int i = 0; i < choiceButtons.Length; i++)
         {

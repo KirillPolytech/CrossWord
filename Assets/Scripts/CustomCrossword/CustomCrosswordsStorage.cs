@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Zenject;
 
-public class CustomCrosswordsStorage
+public class CustomCrosswordsStorage : IInitializable
 {
     private List<CustomCrossword> _crosswords;
     private InputWordPairsScrollView _inputWordPairsScroll;
@@ -12,7 +12,8 @@ public class CustomCrosswordsStorage
     private CrosswordPersistence _crosswordPersistence;
 
     [Inject]
-    public void Construct(InputWordPairsScrollView inputWordPairsScroll, 
+    public void Construct(
+        InputWordPairsScrollView inputWordPairsScroll, 
         CustomCrosswordScrollView crosswordScroll, 
         CrosswordPersistence crosswordPersistence, 
         CrosswordFilesStorage crosswordFilesStorage)
@@ -20,11 +21,9 @@ public class CustomCrosswordsStorage
         _inputWordPairsScroll = inputWordPairsScroll;
         _crosswordScroll = crosswordScroll;
         _crosswordPersistence = crosswordPersistence;
-
-        Awake();
     }
-
-    private void Awake()
+    
+    public void Initialize()
     {
         _crosswords = _crosswordPersistence.LoadCrosswords();
 
@@ -32,39 +31,45 @@ public class CustomCrosswordsStorage
         {
             _crosswords = new List<CustomCrossword>();
         }
-
-        RestoreCrosswords();
+        else
+        {
+            RestoreCrosswords();
+            Debug.LogWarning("Crosswords restored.");
+        }
     }
 
-    public void CreateCrossword()
+    public void Create()
     {
+        if (_crosswords.Count > 0)
+        {
+            Debug.LogWarning("Crosswords limit exceeded.");
+            return;
+        }
+        
         CustomCrossword customCrossword = new CustomCrossword();
         _crosswords.Add(customCrossword);
         
-        _crosswordPersistence.SaveCrossword(customCrossword);
-
         _inputWordPairsScroll.Initialize(customCrossword);
 
-        Action action = () =>
-        {
-            _crosswordPersistence.chosenCrossword = customCrossword.GetWords();
-            _crosswordPersistence.chosenDescription = customCrossword.GetWordDescriptions();
-            SceneLoader.LoadScene(SceneLoader.MainScene);
-        };
+        _crosswordScroll.CreateCustomCrosswordButton(null);
+    }
 
-        _crosswordScroll.CreateCustomCrosswordButton(action);
+    public void Delete()
+    {
+        CustomCrossword last = _crosswords.LastOrDefault();
+
+        _crosswords.Remove(last);
+        
+        _crosswordScroll.DeleteCustomCrosswordButton();
+
+        _crosswordPersistence.DeleteData();
     }
     
     private void RestoreCrosswords()
     {
-        foreach (var action in _crosswords.Select(c => (Action)(() =>
-                 {
-                     _crosswordPersistence.chosenCrossword = c.GetWords();
-                     _crosswordPersistence.chosenDescription = c.GetWordDescriptions();
-                     SceneLoader.LoadScene(SceneLoader.MainScene);
-                 })))
+        foreach (var t in _crosswords)
         {
-            _crosswordScroll.CreateCustomCrosswordButton(action);
+            _crosswordScroll.CreateCustomCrosswordButton(() => _inputWordPairsScroll.RestoreInputFields(t.words, _crosswords.ElementAt(0)));
         }
     }
 }

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class StateMachine 
 {
     public GameState CurrentState { get; private set; }
@@ -20,5 +22,7 @@ public class StateMachine
         CurrentState.ExitState();
         CurrentState = state;
         CurrentState.EnterState();
+        
+        Debug.Log($"State changed: {state}");
     }
 }
