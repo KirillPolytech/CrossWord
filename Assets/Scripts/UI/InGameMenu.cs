@@ -60,7 +60,7 @@ public class InGameMenu : Window
 
     private void UpdateInGameMenuState()
     {
-        if (Input.GetKeyDown(_inputHandler.InteractInGameMenu) == false)
+        if (Input.GetKeyDown(_inputHandler.InteractWithInGameMenu) == false)
             return;
 
         _windowsController.OpenWindow("InGameWindow");

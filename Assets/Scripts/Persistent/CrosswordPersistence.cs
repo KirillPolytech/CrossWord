@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,7 +21,18 @@ public class CrosswordPersistence : ITickable
         
         string stringFromBrowser = PlayerPrefs.GetString(_key);
 
-        CustomCrossword dataFromBrowser = JsonUtility.FromJson<CustomCrossword>(stringFromBrowser);
+        CustomCrossword dataFromBrowser = null;
+        if (string.IsNullOrEmpty(stringFromBrowser) == false)
+        {
+            try
+            {
+                dataFromBrowser = JsonUtility.FromJson<CustomCrossword>(stringFromBrowser);
+            }
+            catch (Exception e)
+            { 
+                Debug.LogWarning(e);
+            }
+        }
 
         if (dataFromBrowser != null)
             _crosswords.Add(dataFromBrowser);
@@ -39,6 +51,8 @@ public class CrosswordPersistence : ITickable
 
     public void SaveCrossword(CustomCrossword customCrossword)
     {
+        _crosswords.Clear();
+        
         _crosswords.Add(customCrossword);
         
         DeleteData();
@@ -53,6 +67,7 @@ public class CrosswordPersistence : ITickable
     private void SaveData()
     {
         string jsonArray = JsonUtility.ToJson(_crosswords[0]);
+        DeleteData();
         Debug.Log($"Data to array");
         PlayerPrefs.SetString(_key, jsonArray);
         Debug.Log($"SetData jsonArray: {jsonArray}");
@@ -63,11 +78,7 @@ public class CrosswordPersistence : ITickable
     public void DeleteData()
     {
         PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
         Debug.Log("Data deleted");
     }
 }
-//FileStream file = File.Create(Application.persistentDataPath + "/MySaveData.txt");
-
-//string jsonArray = JArray.FromObject(_crosswords).ToString();
-
-//_crosswords = JsonConvert.DeserializeObject<CustomCrossword[]>(dataFromBrowser);

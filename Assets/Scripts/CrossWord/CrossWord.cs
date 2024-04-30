@@ -18,6 +18,8 @@ public class CrossWord : MonoBehaviour
     private int _horizontalWordInd, _verticalWordInd;
     private int _indTest = 0;
     private readonly Vector3 _horizontalDir = Vector3.right, _verticalDir = -Vector3.up;
+    
+    private const int IterationsLimit = 1000;
 
     private void Start()
     {
@@ -77,6 +79,8 @@ public class CrossWord : MonoBehaviour
         _verticalWordIndexes[_verticalWordInd++] = wordInd;
         _verticalWordInd = Mathf.Clamp(_verticalWordInd, 0, _verticalWordIndexes.Length - 1);
 
+        int iteration = 1000;
+
         for (int j = 0; j < _crosswordData.crosswordLength * 2 - 1; j++)
         {
             wordSpawnDirection = (j + 1) % 2 == 0
@@ -93,9 +97,16 @@ public class CrossWord : MonoBehaviour
 
                 if (_indTest >= words.Count - 1)
                 {
-                    Debug.LogWarning("Can't find word.");
+                    if (iteration++ > IterationsLimit)
+                    {
+                        iteration = 0;
+                        Debug.LogWarning("Break cycle.");
+                        break;
+                    }
+                    
+                    //Debug.LogWarning("Can't find word.");
                     Destroy();
-                    //Generate();
+                    Generate();
                     return;
                 }
 
@@ -154,6 +165,7 @@ public class CrossWord : MonoBehaviour
                     _horizontalWordInd = Mathf.Clamp(_horizontalWordInd, 0, _horizontalWordIndexes.Length - 1);
                 }
 
+                iteration = 0;
                 break;
             } while (_indTest++ <= words.Count - 1);
         }

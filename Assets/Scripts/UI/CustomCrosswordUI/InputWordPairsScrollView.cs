@@ -11,13 +11,15 @@ public class InputWordPairsScrollView : MonoBehaviour
     [SerializeField] private RectTransform wordPairInputPrefab;
     [SerializeField] private Button startButton;
     [SerializeField] private TextMeshProUGUI errorText;
+    [SerializeField] private TextMeshProUGUI wordsCounter;
     
     private CustomCrossword _customCrossword;
-    private readonly List<CustomWord> _wordPairs = new List<CustomWord>();
+    private List<CustomWord> _wordPairs = new List<CustomWord>();
     private bool _hasError;
     private CrosswordPersistence _crosswordPersistence;
 
-    private const int Minsize = -200;
+    private const int Minsize = 200;
+    private int _wordsCount;
 
     [Inject]
     public void Construct(CrosswordPersistence crosswordPersistence, WindowsController windowsController)
@@ -38,6 +40,13 @@ public class InputWordPairsScrollView : MonoBehaviour
     public void Initialize(CustomCrossword customCrossword)
     {
         _customCrossword = customCrossword;
+
+        wordsCounter.text = "";
+        _wordsCount = 0;
+        ClearScrollView();
+        
+        context.offsetMin = new Vector2(context.offsetMin.x,Minsize);
+        context.offsetMax = new Vector2(context.offsetMax.x,0);
     }
 
     public void AddWordInputField()
@@ -51,15 +60,13 @@ public class InputWordPairsScrollView : MonoBehaviour
             ));
 
         context.offsetMin = new Vector2(context.offsetMin.x, context.offsetMin.y - wordPairInputPrefab.sizeDelta.y);
+        
+        UpdateWordCounterText(++_wordsCount);
     }
 
     public void RestoreInputFields(List<WordData> words, CustomCrossword customCrossword)
     {
         Initialize(customCrossword);
-        
-        ClearScrollView();
-        
-        context.anchoredPosition = new Vector2(0,Minsize);
         
         for (int i = 0; i < words.Count; i++)
         {
@@ -75,7 +82,11 @@ public class InputWordPairsScrollView : MonoBehaviour
             
             _wordPairs.Add(word);
                     
-            context.anchoredPosition = new Vector2(0, context.offsetMin.y - wordPairInputPrefab.sizeDelta.y);
+            context.offsetMin = new Vector2(context.offsetMin.x, context.offsetMin.y - wordPairInputPrefab.sizeDelta.y);
+            
+            UpdateWordCounterText(++_wordsCount);
+            
+            // DEBUG: Debug.Log($"context.offsetMin {context.offsetMin}\n ");
         } 
     }
 
@@ -90,6 +101,8 @@ public class InputWordPairsScrollView : MonoBehaviour
         CustomWord temp = _wordPairs.ElementAt(_wordPairs.Count - 1);
         _wordPairs.Remove(temp);
         Destroy(temp.Parent);
+        
+        UpdateWordCounterText(--_wordsCount);
 
         context.offsetMin = new Vector2(context.offsetMin.x, context.offsetMin.y + wordPairInputPrefab.sizeDelta.y);
     }
@@ -126,6 +139,8 @@ public class InputWordPairsScrollView : MonoBehaviour
             return;
         }
         
+        _customCrossword.words.Clear();
+        
         foreach (var wordPair in _wordPairs)
         {
             _customCrossword.AddWord(wordPair.Word.text, wordPair.Description.text);
@@ -147,5 +162,10 @@ public class InputWordPairsScrollView : MonoBehaviour
             Destroy(_wordPairs.ElementAt(i).Description.gameObject);
             _wordPairs.Remove(_wordPairs.ElementAt(i));
         }
+    }
+
+    private void UpdateWordCounterText(int wordsCount)
+    {
+        wordsCounter.text = $"Words count: {wordsCount}";
     }
 }

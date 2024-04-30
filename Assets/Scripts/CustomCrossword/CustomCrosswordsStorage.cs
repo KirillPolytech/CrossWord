@@ -27,11 +27,7 @@ public class CustomCrosswordsStorage : IInitializable
     {
         _crosswords = _crosswordPersistence.LoadCrosswords();
 
-        if (_crosswords == null)
-        {
-            _crosswords = new List<CustomCrossword>();
-        }
-        else
+        if (_crosswords.Count > 0)
         {
             RestoreCrosswords();
             Debug.LogWarning("Crosswords restored.");
@@ -67,9 +63,7 @@ public class CustomCrosswordsStorage : IInitializable
     
     private void RestoreCrosswords()
     {
-        foreach (var t in _crosswords)
-        {
-            _crosswordScroll.CreateCustomCrosswordButton(() => _inputWordPairsScroll.RestoreInputFields(t.words, _crosswords.ElementAt(0)));
-        }
+        _crosswordScroll.CreateCustomCrosswordButton(() => 
+            _inputWordPairsScroll.RestoreInputFields(_crosswords.ElementAt(0).words, _crosswords.ElementAt(0)));
     }
 }

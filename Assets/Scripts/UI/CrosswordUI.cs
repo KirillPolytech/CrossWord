@@ -19,8 +19,12 @@ public class CrosswordUI : Window
     private GamePreference _gamePreference;
 
     [Inject]
-    public void Construct(WindowsController windowsController, InputHandler inputHandler, 
-        CrossWord crossWord, InGameMenu inGameMenu, GamePreference gamePreference)
+    public void Construct(
+        WindowsController windowsController, 
+        InputHandler inputHandler, 
+        CrossWord crossWord, 
+        InGameMenu inGameMenu, 
+        GamePreference gamePreference)
     {
         _inputHandler = inputHandler;
         _crossWord = crossWord;
@@ -48,14 +52,14 @@ public class CrosswordUI : Window
 
     private void Start()
     {
-        tutorial.text = $"Generate crossword key: {_inputHandler.GenerateCrosswordKey}\n";
+        tutorial.text = $"Generate crossword key: {_inputHandler.GenerateCrosswordKey}\nOpen pause menu: {_inputHandler.InteractWithInGameMenu}\nDelete saved crosswords: {_inputHandler.DeleteSaves}";
     }
 
     private void HandleInput()
     {
         if (Input.GetKeyDown(_inputHandler.GenerateCrosswordKey))
         {
-            Debug.Log("Generate Crossword\n");
+            //Debug.Log("Generate Crossword\n");
             _crossWord.Generate();
             SetDescription(_crossWord.SpawnedWords, _inGameMenu.IsHintsEnabled);
         }
@@ -73,7 +77,9 @@ public class CrosswordUI : Window
     
     private void SetDescription(HashSet<CharacterLogic> spawnedWords, bool hints)
     {
-        string horizontalWordDesc = "Horizontal:\n", verticalWordDesc = "Vertical:\n";       
+        string horizontalWordDesc = "Horizontal:\n", verticalWordDesc = "Vertical:\n";
+
+        wordDescriptions.text = string.Empty;
 
         int i = 0, f = 0;
         foreach (CharacterLogic word in spawnedWords)
@@ -89,7 +95,7 @@ public class CrosswordUI : Window
             }
             else
             {
-                if (hints)
+                if (hints == true)
                     verticalWordDesc += $"{f + 1}) {word.WordData.WordDescription} ({word.WordData.Word})\n";
                 else
                     verticalWordDesc += $"{f + 1}) {word.WordData.WordDescription}\n";
@@ -98,5 +104,6 @@ public class CrosswordUI : Window
             }
         }
         wordDescriptions.text = $"{horizontalWordDesc} \n {verticalWordDesc}";
+        wordDescriptions.text = wordDescriptions.text.Replace("\r", "");
     }
 }

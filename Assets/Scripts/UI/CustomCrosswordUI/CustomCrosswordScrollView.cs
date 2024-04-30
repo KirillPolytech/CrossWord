@@ -11,6 +11,7 @@ public class CustomCrosswordScrollView : MonoBehaviour
     [SerializeField] private RectTransform context;
     [SerializeField] private RectTransform customCrosswordButtonPrefab;
     [SerializeField] private Button addCrosswordButton;
+    [SerializeField] private TextMeshProUGUI errorText;
 
     private List<RectTransform> _customCrosswords = new List<RectTransform>();
     private WindowsController _windowsController;
@@ -25,7 +26,15 @@ public class CustomCrosswordScrollView : MonoBehaviour
     {
         addCrosswordButton.onClick.AddListener(() =>
         {
-            _windowsController.OpenWindow("Creation");
+            if (_customCrosswords.Count <= 0)
+            {
+                errorText.text = "";
+                _windowsController.OpenWindow("Creation");
+            }
+            else
+            {
+                errorText.text = "Crosswords limit exceeded";
+            }
         } );
     }
 
