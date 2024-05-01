@@ -24,27 +24,23 @@ public class GlobalInstaller : MonoInstaller
     private void BindInputHandler()
     {
         Container.
-            Bind<InputHandler>().
-            FromInstance(inputHandler).
-            //FromNewComponentOnNewGameObject().
-            AsSingle().
-            NonLazy();
+            BindInstance(inputHandler)
+            .AsSingle()
+            .NonLazy();
     }
 
     private void BindGamePreference()
     {
         Container.
-            Bind<GamePreference>().
-            FromNew().
-            AsSingle().
-            NonLazy();;
+            Bind<GamePreference>()
+            .AsSingle()
+            .NonLazy();
     }
 
     private void BindCrosswordFilesStorage()
     {
         Container.
-            Bind<CrosswordFilesStorage>().
-            FromInstance(crosswordFilesStorage).
+            BindInstance(crosswordFilesStorage).
             AsSingle().
             NonLazy();
     }
@@ -53,7 +49,6 @@ public class GlobalInstaller : MonoInstaller
     {
         Container.
             BindInterfacesAndSelfTo<CrosswordPersistence>().
-            FromNew().
             AsSingle().
             NonLazy();
     }

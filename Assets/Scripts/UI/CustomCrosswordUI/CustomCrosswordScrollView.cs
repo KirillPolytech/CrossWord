@@ -13,7 +13,9 @@ public class CustomCrosswordScrollView : MonoBehaviour
     [SerializeField] private Button addCrosswordButton;
     [SerializeField] private TextMeshProUGUI errorText;
 
-    private List<RectTransform> _customCrosswords = new List<RectTransform>();
+    public int CustomCrosswordsButtonsCount => _customCrosswordsButtons.Count;
+    
+    private List<RectTransform> _customCrosswordsButtons = new List<RectTransform>();
     private WindowsController _windowsController;
 
     [Inject]
@@ -26,37 +28,29 @@ public class CustomCrosswordScrollView : MonoBehaviour
     {
         addCrosswordButton.onClick.AddListener(() =>
         {
-            if (_customCrosswords.Count <= 0)
-            {
-                errorText.text = "";
-                _windowsController.OpenWindow("Creation");
-            }
-            else
-            {
-                errorText.text = "Crosswords limit exceeded";
-            }
+            errorText.text = _customCrosswordsButtons.Count < 5 ? "" : "Crosswords limit exceeded";
         } );
     }
 
     public void CreateCustomCrosswordButton(Action action)
     {
         var temp = Instantiate(customCrosswordButtonPrefab, context);
-        temp.GetComponentInChildren<TextMeshProUGUI>().text = $"Custom crossword {_customCrosswords.Count + 1}";
+        temp.GetComponentInChildren<TextMeshProUGUI>().text = $"Custom crossword {_customCrosswordsButtons.Count + 1}";
         temp.GetComponent<Button>().onClick.AddListener(() =>
         {
             action?.Invoke();
             _windowsController.OpenWindow("Creation");
         });
         
-        _customCrosswords.Add(temp);
+        _customCrosswordsButtons.Add(temp);
         
         //context.offsetMin = new Vector2(context.offsetMin.x - customCrosswordButtonPrefab.sizeDelta.x, context.offsetMin.y);
     }
 
     public void DeleteCustomCrosswordButton()
     {
-        RectTransform temp = _customCrosswords.LastOrDefault();
-        _customCrosswords.Remove(temp);
+        RectTransform temp = _customCrosswordsButtons.LastOrDefault();
+        _customCrosswordsButtons.Remove(temp);
         
         if (temp)
             Destroy(temp.gameObject);

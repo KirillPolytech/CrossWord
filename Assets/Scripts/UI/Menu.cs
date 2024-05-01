@@ -9,21 +9,24 @@ public class Menu : MonoBehaviour
     [SerializeField] private Button deleteCrosswordButton;
 
     private CrosswordPersistence _crosswordPersistence;
-    private CustomCrosswordsStorage _customCrosswordsStorage;
+    private CustomCrosswordsButtonController _customCrosswordsButtonController;
     private CrosswordFilesStorage _crosswordFilesStorage;
 
     [Inject]
-    public void Construct(CrosswordFilesStorage crosswordFilesStorage, CrosswordPersistence crosswordPersistence, CustomCrosswordsStorage customCrosswordsStorage)
+    public void Construct(
+        CrosswordFilesStorage crosswordFilesStorage, 
+        CrosswordPersistence crosswordPersistence, 
+        CustomCrosswordsButtonController customCrosswordsButtonController)
     {
         _crosswordPersistence = crosswordPersistence;
-        _customCrosswordsStorage = customCrosswordsStorage;
+        _customCrosswordsButtonController = customCrosswordsButtonController;
         _crosswordFilesStorage = crosswordFilesStorage;
     }
     
     private void Start()
     {
-        addCrosswordButton.onClick.AddListener(_customCrosswordsStorage.Create);
-        deleteCrosswordButton.onClick.AddListener(_customCrosswordsStorage.Delete);
+        addCrosswordButton.onClick.AddListener(_customCrosswordsButtonController.Create);
+        deleteCrosswordButton.onClick.AddListener(_customCrosswordsButtonController.Delete);
         
         for (int i = 0; i < choiceButtons.Length; i++)
         {

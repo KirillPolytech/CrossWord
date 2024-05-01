@@ -8,6 +8,7 @@ public class CrosswordSettingsUI : Window
 {
     [SerializeField] private TMP_InputField generateCrosswordInputField;
     [SerializeField] private Button backButton;
+    [SerializeField] private TextMeshProUGUI tutorial;
 
     private InputHandler _input;
     private WindowsController _windowsController;
@@ -26,6 +27,11 @@ public class CrosswordSettingsUI : Window
         backButton.onClick.AddListener(() => _windowsController.OpenWindow("Main"));
         
         generateCrosswordInputField.text = _input.GenerateCrosswordKey.ToString();
+
+        tutorial.text = $"Open pause menu: {_input.InteractWithInGameMenu}\n" +
+                        $"Close input menu: {_input.RightMouseButton}\n" +
+                        $"Camera movement: WSAD\n" +
+                        $"Delete all saves: {_input.DeleteSaves}\n";
     }
 
     private void OnDisable()

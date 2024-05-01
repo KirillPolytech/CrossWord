@@ -12,6 +12,6 @@ public class MenuInstaller : MonoInstaller
         Container.BindInstance(inputWordPairsScroll).AsSingle();
         Container.BindInstance(crosswordScroll).AsSingle();
         Container.BindInstance(windowsController).AsSingle();
-        Container.BindInterfacesAndSelfTo<CustomCrosswordsStorage>().AsSingle();
+        Container.BindInterfacesAndSelfTo<CustomCrosswordsButtonController>().AsSingle();
     }
 }

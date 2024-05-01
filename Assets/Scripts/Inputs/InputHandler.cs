@@ -10,7 +10,7 @@ public class InputHandler : MonoBehaviour
 
     public bool IsEnabled { get; set; }
     public KeyCode CurrentKeyDown { get; private set; }
-    public KeyCode GenerateCrosswordKey { get; set; } = KeyCode.R;
+    public KeyCode GenerateCrosswordKey { get; set; } = KeyCode.LeftAlt;
     public KeyCode DeleteSaves { get; private set; } = KeyCode.F8;
     public KeyCode InteractWithInGameMenu { get; private set; } = KeyCode.Tab;
     public bool Enter { get; private set; }

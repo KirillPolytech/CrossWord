@@ -8,6 +8,7 @@ public class CrosswordUI : Window
 {
     [SerializeField] private TextMeshProUGUI tutorial;
     [SerializeField] private TextMeshProUGUI wordDescriptions;
+    [SerializeField] private TextMeshProUGUI errorText;
 
     private CharacterLogic _characterLogic;
     private bool _isInputMenuOpened;
@@ -43,11 +44,13 @@ public class CrosswordUI : Window
     private void OnEnable()
     {
         _inputHandler.AlwaysUpdateCall += HandleInput;
+        _crossWord.OnGenerationFinish += UpdateErrorText;
     }
 
     private void OnDisable()
     {
         _inputHandler.AlwaysUpdateCall -= HandleInput;
+        _crossWord.OnGenerationFinish -= UpdateErrorText;
     }
 
     private void Start()
@@ -55,12 +58,17 @@ public class CrosswordUI : Window
         tutorial.text = $"Generate crossword key: {_inputHandler.GenerateCrosswordKey}\nOpen pause menu: {_inputHandler.InteractWithInGameMenu}\nDelete saved crosswords: {_inputHandler.DeleteSaves}";
     }
 
+    private void UpdateErrorText(string error)
+    {
+        errorText.text = error;
+    }
+
     private void HandleInput()
     {
         if (Input.GetKeyDown(_inputHandler.GenerateCrosswordKey))
         {
             //Debug.Log("Generate Crossword\n");
-            _crossWord.Generate();
+            _crossWord.StartGenerate();
             SetDescription(_crossWord.SpawnedWords, _inGameMenu.IsHintsEnabled);
         }
 

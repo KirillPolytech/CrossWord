@@ -11,15 +11,17 @@ public class CrossWord : MonoBehaviour
 {
     public readonly HashSet<CharacterLogic> SpawnedWords = new HashSet<CharacterLogic>();
 
+    public event Action<string> OnGenerationFinish;
+
     private readonly HashSet<Vector3> _occupiedPositions = new HashSet<Vector3>();
     private CrosswordData _crosswordData;
     private string[] _words, _descriptions;
     private int[] _horizontalWordIndexes, _verticalWordIndexes;
     private int _horizontalWordInd, _verticalWordInd;
-    private int _indTest = 0;
+    private int _indTest;
     private readonly Vector3 _horizontalDir = Vector3.right, _verticalDir = -Vector3.up;
     
-    private const int IterationsLimit = 1000;
+    private const int IterationsLimit = 10;
 
     private void Start()
     {
@@ -32,17 +34,20 @@ public class CrossWord : MonoBehaviour
         _descriptions = _descriptions.Where(s => s != string.Empty).ToArray();
         
         if (_words.Length != _descriptions.Length)
-            throw new Exception("words and description lengths are not the same");
+            throw new Exception("Words and description lengths are not the same.");
 
         for (int i = 0; i < _words.Length; i++)
             _words[i] = _words[i].ToLower();
     }
 
-    public void Generate()
+    public void StartGenerate()
     {
+        OnGenerationFinish?.Invoke(string.Empty);
+        
         if (_words.Length <= _crosswordData.crosswordLength + _crosswordData.crosswordLength)
         {
-            Debug.LogWarning("No words");
+            Debug.LogWarning("Error: No words.");
+            OnGenerationFinish?.Invoke("Error: No words.");
             return;
         }
 
@@ -52,7 +57,19 @@ public class CrossWord : MonoBehaviour
         _horizontalWordIndexes = new int[_crosswordData.crosswordLength + 1];
         _verticalWordIndexes = new int[_crosswordData.crosswordLength + 1];
 
-        StartGeneration(wordInd, _words, _descriptions);
+        for (int i = 0; i < IterationsLimit; i++)
+        {
+            bool temp = Generate(wordInd, _words, _descriptions);
+
+            if (temp == false)
+            {
+                Debug.LogWarning("Error: generation failure. Try again.");
+                OnGenerationFinish?.Invoke("Error: generation failure. Try again.");
+            }
+            
+            if (temp == true)
+                break;
+        }
     }
 
     private void Destroy()
@@ -67,7 +84,7 @@ public class CrossWord : MonoBehaviour
         _horizontalWordInd = _verticalWordInd = 0;
     }
 
-    private void StartGeneration(int wordInd, IReadOnlyList<string> words, IReadOnlyList<string> descriptions)
+    private bool Generate(int wordInd, IReadOnlyList<string> words, IReadOnlyList<string> descriptions)
     {
         Vector3 spawnStartPos = Vector3.zero;
         Vector3 wordSpawnDirection = _verticalDir * _crosswordData.distanceBetweenBlocks;
@@ -78,9 +95,7 @@ public class CrossWord : MonoBehaviour
         SpawnedWords.Add(word);
         _verticalWordIndexes[_verticalWordInd++] = wordInd;
         _verticalWordInd = Mathf.Clamp(_verticalWordInd, 0, _verticalWordIndexes.Length - 1);
-
-        int iteration = 1000;
-
+        
         for (int j = 0; j < _crosswordData.crosswordLength * 2 - 1; j++)
         {
             wordSpawnDirection = (j + 1) % 2 == 0
@@ -97,23 +112,15 @@ public class CrossWord : MonoBehaviour
 
                 if (_indTest >= words.Count - 1)
                 {
-                    if (iteration++ > IterationsLimit)
-                    {
-                        iteration = 0;
-                        Debug.LogWarning("Break cycle.");
-                        break;
-                    }
-                    
                     //Debug.LogWarning("Can't find word.");
                     Destroy();
-                    Generate();
-                    return;
+                    return false;
                 }
 
                 if (_words[wordInd] == string.Empty)
                 {
                     Debug.LogWarning("Empty word.");
-                    return;
+                    return false;
                 }
 
                 if (SpawnedWords.FirstOrDefault(x => x.WordData.WordIndex == wordInd) != false)
@@ -164,11 +171,11 @@ public class CrossWord : MonoBehaviour
                     _horizontalWordIndexes[_horizontalWordInd++] = wordInd;
                     _horizontalWordInd = Mathf.Clamp(_horizontalWordInd, 0, _horizontalWordIndexes.Length - 1);
                 }
-
-                iteration = 0;
                 break;
             } while (_indTest++ <= words.Count - 1);
         }
+
+        return true;
     }
 
     private CharacterLogic SpawnWord(Vector3 start, Vector3 dir, string word, string wordDescription,

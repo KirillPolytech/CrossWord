@@ -9,35 +9,45 @@ public class CrosswordPersistence : ITickable
     public string chosenCrossword;
     public string chosenDescription;
 
-    private readonly List<CustomCrossword> _crosswords = new List<CustomCrossword>();
-    private int _ind;
-    private readonly string _key = "k";
+    public int CurrentIndex { get; private set; }
+
+    public int CrosswordLIMITS => CrosswordsLimit;
+    
+    private const int CrosswordsLimit = 5;
+    private readonly CustomCrossword[] _crosswords = new CustomCrossword[CrosswordsLimit];
     private InputHandler _inputHandler;
+
+    private static readonly string[] Keys = new string[]{"1", "2", "3", "4", "5"};
     
     [Inject]
     public CrosswordPersistence(InputHandler inputHandler)
     {
-        _inputHandler = inputHandler; 
-        
-        string stringFromBrowser = PlayerPrefs.GetString(_key);
+        _inputHandler = inputHandler;
 
-        CustomCrossword dataFromBrowser = null;
-        if (string.IsNullOrEmpty(stringFromBrowser) == false)
+        for (int i = 0; i < CrosswordsLimit; i++)
         {
-            try
+            string stringFromBrowser = PlayerPrefs.GetString(Keys[i]);
+            
+            CustomCrossword dataFromBrowser = null;
+            if (string.IsNullOrEmpty(stringFromBrowser) == false)
             {
-                dataFromBrowser = JsonUtility.FromJson<CustomCrossword>(stringFromBrowser);
+                try
+                {
+                    dataFromBrowser = JsonUtility.FromJson<CustomCrossword>(stringFromBrowser);
+                }
+                catch (Exception e)
+                { 
+                    Debug.LogWarning(e);
+                }
             }
-            catch (Exception e)
-            { 
-                Debug.LogWarning(e);
+
+            if (dataFromBrowser != null)
+            {
+                _crosswords[CurrentIndex++] = dataFromBrowser;
             }
         }
 
-        if (dataFromBrowser != null)
-            _crosswords.Add(dataFromBrowser);
-
-        Debug.Log(dataFromBrowser == null ? $"data null" : $"Data is not null");
+        Debug.Log(CurrentIndex == 0 ? $"data null" : $"Data is not null");
     }
     
     [Inject]
@@ -45,40 +55,76 @@ public class CrosswordPersistence : ITickable
     {
         if (Input.GetKeyDown(_inputHandler.DeleteSaves))
         {
-            DeleteData();
+            DeleteAllData();
         }
     }
 
-    public void SaveCrossword(CustomCrossword customCrossword)
+    public void SaveCrossword(CustomCrossword customCrossword, int index)
     {
-        _crosswords.Clear();
-        
-        _crosswords.Add(customCrossword);
+        if (index > CrosswordsLimit - 1 || index < 0)
+        {
+            Debug.LogWarning($"Limit exceeded. {index}");
+            return;
+        }
+
+        _crosswords[index] = null;
+        _crosswords[index] = customCrossword;
         
         DeleteData();
         SaveData();
     }
 
-    public List<CustomCrossword> LoadCrosswords()
+    public List<List<WordData>> LoadCrosswords()
     {
-        return _crosswords?.Where(x => x != null).ToList();
+        if (CurrentIndex <= 0 && _crosswords.All(x => x == null))
+            return null;
+        
+        List<List<WordData>> d = new List<List<WordData>>();
+
+        int i = 0;
+        foreach (var customCrossword in _crosswords.Where(x => x != null))
+        {
+            List<WordData> data = new List<WordData>();
+            for (int k = 0; k < customCrossword.words.Count; k++)
+            {
+                data.Add(customCrossword.words.ElementAt(k));
+            }
+
+            d.Add(data);
+            i++;
+        }
+
+        return d;
     }
 
     private void SaveData()
     {
-        string jsonArray = JsonUtility.ToJson(_crosswords[0]);
         DeleteData();
-        Debug.Log($"Data to array");
-        PlayerPrefs.SetString(_key, jsonArray);
-        Debug.Log($"SetData jsonArray: {jsonArray}");
-        PlayerPrefs.Save();
-        Debug.Log($"saves data");
+        
+        for (int i = 0; i < CrosswordsLimit; i++)
+        {
+            if (_crosswords[i] == null)
+                continue;
+            
+            string jsonArray = JsonUtility.ToJson(_crosswords[i]);
+            PlayerPrefs.SetString(Keys[i], jsonArray);
+            PlayerPrefs.Save();
+            
+            Debug.Log("Data saved.");
+        }
     }
 
     public void DeleteData()
     {
+        CurrentIndex = Mathf.Clamp(--CurrentIndex, 0, CrosswordLIMITS);
+        PlayerPrefs.DeleteKey($"{CurrentIndex}");
+        PlayerPrefs.Save();
+        Debug.Log("Data deleted.");
+    }
+
+    private void DeleteAllData()
+    {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
-        Debug.Log("Data deleted");
     }
 }

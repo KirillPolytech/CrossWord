@@ -7,18 +7,20 @@ using Zenject;
 
 public class InputWordPairsScrollView : MonoBehaviour
 {
+    [Range(0, 100)][SerializeField] private int minimumWords = 21;
+    
     [SerializeField] private RectTransform context;
     [SerializeField] private RectTransform wordPairInputPrefab;
     [SerializeField] private Button startButton;
     [SerializeField] private TextMeshProUGUI errorText;
     [SerializeField] private TextMeshProUGUI wordsCounter;
     
-    private CustomCrossword _customCrossword;
+    private int _crosswordIndex = -1;
     private List<CustomWord> _wordPairs = new List<CustomWord>();
     private bool _hasError;
     private CrosswordPersistence _crosswordPersistence;
 
-    private const int Minsize = 200;
+    private const int Minsize = 100;
     private int _wordsCount;
 
     [Inject]
@@ -28,6 +30,11 @@ public class InputWordPairsScrollView : MonoBehaviour
         
         startButton.onClick.AddListener(() =>
         {
+            if (_crosswordIndex == -1)
+            {
+                Debug.LogWarning("_crosswordIndex == -1");
+            }
+            
             FinishCustomCrossword();
 
             if (_hasError == false)
@@ -37,9 +44,9 @@ public class InputWordPairsScrollView : MonoBehaviour
         });
     }
     
-    public void Initialize(CustomCrossword customCrossword)
+    public void Initialize(int index)
     {
-        _customCrossword = customCrossword;
+        _crosswordIndex = index;
 
         wordsCounter.text = "";
         _wordsCount = 0;
@@ -64,10 +71,8 @@ public class InputWordPairsScrollView : MonoBehaviour
         UpdateWordCounterText(++_wordsCount);
     }
 
-    public void RestoreInputFields(List<WordData> words, CustomCrossword customCrossword)
+    public void RestoreInputFields(List<WordData> words)
     {
-        Initialize(customCrossword);
-        
         for (int i = 0; i < words.Count; i++)
         {
             RectTransform temp = Instantiate(wordPairInputPrefab, context);
@@ -92,7 +97,7 @@ public class InputWordPairsScrollView : MonoBehaviour
 
     public void DeleteLastWordInputField()
     {
-        if (_wordPairs.Count <= 0)
+        if (_wordPairs.Count <= minimumWords)
         {
             Debug.LogWarning("Empty");
             return;
@@ -112,9 +117,9 @@ public class InputWordPairsScrollView : MonoBehaviour
         errorText.text = "";
         _hasError = false;
         
-        if (_wordPairs.Count < 14)
+        if (_wordPairs.Count < minimumWords)
         { 
-            errorText.text += "Error. The number of words does not exceed 14.\n";
+            errorText.text += $"Error. The number of words does not exceed {minimumWords}.\n";
             _hasError = true;
         }
         
@@ -138,30 +143,38 @@ public class InputWordPairsScrollView : MonoBehaviour
         {
             return;
         }
-        
-        _customCrossword.words.Clear();
-        
-        foreach (var wordPair in _wordPairs)
+
+        CustomCrossword customCrossword = new CustomCrossword();
+
+        for (int i = 0; i < _wordPairs.Count; i++)
         {
-            _customCrossword.AddWord(wordPair.Word.text, wordPair.Description.text);
+            customCrossword.words.Add(new WordData()
+            {
+                Word = _wordPairs[i].Word.text,
+                WordDescription = _wordPairs[i].Description.text,
+            });
         }
         
-        _crosswordPersistence.SaveCrossword(_customCrossword);
+        _crosswordPersistence.SaveCrossword(customCrossword, _crosswordIndex);
 
-        _crosswordPersistence.chosenCrossword = _customCrossword.GetWords();
-        _crosswordPersistence.chosenDescription = _customCrossword.GetWordDescriptions();
+        _crosswordPersistence.chosenCrossword = customCrossword.GetWords();
+        _crosswordPersistence.chosenDescription = customCrossword.GetWordDescriptions();
     }
 
     private void ClearScrollView()
     {
+        if (_wordPairs.Count <= 0)
+            return;
+        
         int length = _wordPairs.Count;
         for (int i = 0; i < length; i++)
         {
             Destroy(_wordPairs.ElementAt(i).Parent);
             Destroy(_wordPairs.ElementAt(i).Word.gameObject);
             Destroy(_wordPairs.ElementAt(i).Description.gameObject);
-            _wordPairs.Remove(_wordPairs.ElementAt(i));
         }
+        
+        _wordPairs.Clear();
     }
 
     private void UpdateWordCounterText(int wordsCount)
