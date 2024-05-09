@@ -1,0 +1,74 @@
+Video that becomes popular through internet.
+Collection of files arranged on top of each other.
+Piece of furniture used to store documents or files, often found in offices.
+Distinctive characteristics or functionalities of a product or service that set it apart from others.
+Specific examples or occurrences of objects in a programming context.
+Sets of tools or software programs that are related and used together for a specific purpose.
+Abbreviation of software for creating and managing databases.
+Software with source code that is freely available for use.
+Databases that store data in tables and establish relationships.
+Data structure in a database that organizes information in rows and columns.
+Rows or records in a relational database.
+Columns in a database table that describe the properties of objects.
+To store data or information in a database.
+To include data or information about a specific object in a database.
+To increase a value by a specific amount, often used in auto-increment fields in databases.
+To monitor changes or processes in a database.
+To provide the result of a query or function.
+To add a new record or data into a database.
+To apply criteria for selecting specific data from a database.
+To modify, process, or manage data in a database.
+Key in a database table, uniquely identifying each record.
+Key in a relational database that links two tables.
+In response or as a result of a previous action.
+To fetch or obtain data from a database.
+Request for specific information from a database.
+Abbreviation of a language used for working with databases.
+Parts of a SQL query that define operations or filters.
+Expressions that define conditions for filtering data in SQL queries.
+Statements or formulas used to perform operations in SQL or programming.
+Databases that provide a mechanism for storage and retrieval of data that is modeled in ways other than the tabular relations used in relational databases.
+To put something into effect or action.
+To state or describe the precise nature or scope of something.
+Databases that store and retrieve data as documents, typically using formats like JSON or XML.
+Unclear or difficult to understand.
+Single piece of data stored in a database.
+To get rid of or throw away data or information.
+Data structure that associates keys with values.
+Data structure that maps keys to values for efficient lookup.
+Indicating a point in time or a period of time.
+Software stack consisting of Linux, Apache, MySQL, and PHP/Python/Perl for web development.
+Collection of open-source products for real-time search, analytics, and visualization.
+Moderately or reasonably.
+Simple or straightforward.
+To make software available for use in a production environment.
+Traditional architecture where all components are interconnected and interdependent.
+Database located on a server that is accessed over a network.
+Specifically allocated for a particular purpose.
+Preassigned port used for communication in networking.
+Unauthorized interception of data packets on a network.
+To set up or arrange components according to a specific purpose or function.
+To permit or enable something to happen.
+To allow or permit something.
+Easy to understand or operate without explicit instructions.
+The process of copying and maintaining databases in multiple locations for fault tolerance.
+Partitioning data across multiple databases or servers for scalability.
+The duplication of critical components or functions to increase reliability.
+To divide data or resources into smaller parts.
+Patterns or relationships present in data that are not immediately apparent.
+Technologies and strategies for analyzing and presenting business data.
+Models that make predictions based on data and statistical algorithms.
+Algorithms used to analyze and draw conclusions from data.
+Advantage or gain obtained from software or technology.
+Difficulty or problem that needs to be overcome in IT projects or tasks.
+Possibilities for generating income through IT initiatives.
+Customizing experiences or services for individual customers.
+To gather information from various sources.
+To manipulate, analyze, or transform data for a specific purpose.
+To remove errors, inconsistencies, or redundancies from data sets.
+The process of discovering patterns and extracting knowledge from large data sets.
+Storage repository that holds a vast amount of raw data in its native format until needed.
+Central repository of integrated data for analysis and reporting.
+Systems, software, or databases within an organization.
+Sources of data or information outside an organization.
+Systems or algorithms that deliver personalized content or recommendations based on user data.

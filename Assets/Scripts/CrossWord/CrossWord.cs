@@ -30,6 +30,11 @@ public class CrossWord : MonoBehaviour
         _words = _crosswordData.words.Split("\n");
         _descriptions = _crosswordData.descriptions.Split("\n");
 
+        for (int i = 0; i < _words.Length; i++)
+        {
+            _words[i] = _words[i].Replace("\r", "");
+        }
+        
         _words = _words.Where(s => s != string.Empty).ToArray();
         _descriptions = _descriptions.Where(s => s != string.Empty).ToArray();
         

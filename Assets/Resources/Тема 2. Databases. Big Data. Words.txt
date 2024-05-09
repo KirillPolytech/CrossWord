@@ -1,0 +1,74 @@
+Viral video
+Stack of files
+File cabinet
+Unique features
+Instances
+Associated toolsets
+DBMS
+Open-source
+Relational databases
+Table
+Tuples
+Attributes
+To hold
+To contain a record
+To increment
+To keep track
+To return
+To insert
+To filter
+To manipulate
+Primary
+Foreign key
+In turn
+To retrieve
+Query
+SQL
+Clauses
+Predicates
+Expressions
+NoSQL databases
+To implement
+To define
+Document stores
+Opaque
+Entry
+To discard
+Associative array
+Hash table
+Since
+LAMP stack
+Elastic stack
+Fairly
+Trivial
+To deploy
+Monolithic architecture
+Remote database
+Dedicated
+Default port
+Sniffing attacks
+To configure
+To allow
+To let
+Intuitive
+Replication
+Sharding
+Redundancy
+To split
+Hidden patterns
+Business intelligence
+Predictive models
+Statistical algorithms
+Benefit
+Challenge
+Revenue opportunities
+Customer personalization
+To collect data from
+To process
+Cleanse data
+Data mining
+Data lake
+Data warehouse
+Internal systems
+External sources
+Personalization engines
