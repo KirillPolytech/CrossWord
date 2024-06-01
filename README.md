@@ -1,2 +1,4 @@
 # CrossWord
-CrosswordGenerator
+Генератор кроссвордов на английском языке, разработанный в рамках изучения языка.
+Приложение разработано на Unity 3D.
+https://bearer.itch.io/crossword-2024
